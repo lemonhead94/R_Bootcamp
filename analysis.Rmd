@@ -67,6 +67,9 @@ joined_data <- left_join(joined_data, vegan_temp %>% select(province, total_sear
 ```
 
 Checking for missing data
+
+## Missing Values
+
 ```{r missing data check google search results, warning=FALSE}
 sum(is.na(joined_data$total_searches_vegetarian))
 sum(is.na(joined_data$total_searches_vegan))
