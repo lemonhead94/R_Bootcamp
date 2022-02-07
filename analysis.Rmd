@@ -3,8 +3,8 @@ title: "Vegan & Vegetarian Restaurants"
 author: "Jorit Studer and Larissa Eisele"
 date: "2/1/2022"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
