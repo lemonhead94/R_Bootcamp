@@ -3,8 +3,8 @@ title: "Vegan & Vegetarian Restaurants"
 author: "Jorit Studer and Larissa Eisele"
 date: "2/1/2022"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +14,7 @@ library(readxl)
 # https://plotly.com/ggplot2/bubble-maps/
 ```
 
-# Importing Data
+# Importing Data Learning
 
 We are gathering data from the following sources...
 
