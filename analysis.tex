@@ -1,0 +1,237 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\title{Vegan \& Vegetarian Restaurants}
+\author{Jorit Studer and Larissa Eisele}
+\date{2/1/2022}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Vegan \& Vegetarian Restaurants},
+  pdfauthor={Jorit Studer and Larissa Eisele},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+\maketitle
+
+\hypertarget{importing-data}{%
+\section{Importing Data}\label{importing-data}}
+
+We are gathering data from the following sources\ldots{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# setwd("/Users/jorit/Library/Mobile\textbackslash{} Documents/com\textasciitilde{}apple\textasciitilde{}CloudDocs/Dokumente/HSLU/Semester\_01/R\_Bootcamp/Group\_Work/")}
+\NormalTok{restaurants }\OtherTok{\textless{}{-}}\FunctionTok{read.csv}\NormalTok{(}\StringTok{"./Data/veg\_restaurants\_US.csv"}\NormalTok{)}
+\NormalTok{income\_pop\_by\_zip }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"./Data/MeanZIP{-}3.xlsx"}\NormalTok{)}
+\NormalTok{google\_searches\_vegetarian }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"./Data/searches\_vegetarian\_res.xlsx"}\NormalTok{)}
+\NormalTok{google\_searches\_vegan }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"./Data/searches\_vegan\_res.xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data-processing}{%
+\section{Data Processing}\label{data-processing}}
+
+\hypertarget{restaurant-data}{%
+\subsection{Restaurant Data}\label{restaurant-data}}
+
+We are selecting the following data from the restaurant data set
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{restaurants }\OtherTok{\textless{}{-}}\NormalTok{ restaurants }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(id, dateAdded, cuisines, latitude, longitude, menus.category, name, province, postalCode)}
+\NormalTok{restaurants}\SpecialCharTok{$}\NormalTok{postalCode }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(restaurants}\SpecialCharTok{$}\NormalTok{postalCode)}
+\NormalTok{restaurants }\OtherTok{\textless{}{-}}\NormalTok{ restaurants }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cusinines\_split =} \FunctionTok{strsplit}\NormalTok{(cuisines,}\StringTok{","}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Cleaning the missing data from on restaurant\ldots{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{restaurants[restaurants}\SpecialCharTok{$}\NormalTok{id }\SpecialCharTok{==} \StringTok{"AV1Tp59p3D1zeR\_xE2DL"}\NormalTok{,]}\SpecialCharTok{$}\NormalTok{postalCode }\OtherTok{\textless{}{-}} \DecValTok{94596}
+\FunctionTok{anyNA}\NormalTok{(restaurants}\SpecialCharTok{$}\NormalTok{postalCode) }\CommentTok{\# There are no missing values anymore in postalCode (zip code)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
+\hypertarget{population-size-and-mean-household-income-data}{%
+\subsection{Population Size and Mean Household Income
+Data}\label{population-size-and-mean-household-income-data}}
+
+\textbf{Joining the Data}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{joined\_data }\OtherTok{\textless{}{-}} \FunctionTok{left\_join}\NormalTok{(restaurants, income\_pop\_by\_zip }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(Zip, Mean, Pop), }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"postalCode"} \OtherTok{=} \StringTok{"Zip"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Checking for missing data}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(joined\_data}\SpecialCharTok{$}\NormalTok{Mean)) }\CommentTok{\# all postal codes have a mean household income}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(joined\_data}\SpecialCharTok{$}\NormalTok{Pop)) }\CommentTok{\# all postal codes have a population}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\hypertarget{google-search-data}{%
+\subsection{Google Search Data}\label{google-search-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Vegetarian Restaurant Search Results}
+\NormalTok{vegetarian\_temp }\OtherTok{\textless{}{-}}\NormalTok{ google\_searches\_vegetarian }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(province) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{summarise}\NormalTok{(}\AttributeTok{total\_searches\_vegetarian =} \FunctionTok{sum}\NormalTok{(search\_vegetarian\_res, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{joined\_data }\OtherTok{\textless{}{-}} \FunctionTok{left\_join}\NormalTok{(joined\_data, vegetarian\_temp }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(province, total\_searches\_vegetarian), }\AttributeTok{by =} \StringTok{"province"}\NormalTok{)}
+\CommentTok{\# Vegan Restaurant Search Results}
+\NormalTok{vegan\_temp }\OtherTok{\textless{}{-}}\NormalTok{ google\_searches\_vegan }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(province) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{summarise}\NormalTok{(}\AttributeTok{total\_searches\_vegan =} \FunctionTok{sum}\NormalTok{(search\_vegan\_res, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{joined\_data }\OtherTok{\textless{}{-}} \FunctionTok{left\_join}\NormalTok{(joined\_data, vegan\_temp }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(province, total\_searches\_vegan), }\AttributeTok{by =} \StringTok{"province"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Checking for missing data
+
+\hypertarget{missing-values}{%
+\subsection{Missing Values}\label{missing-values}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(joined\_data}\SpecialCharTok{$}\NormalTok{total\_searches\_vegetarian))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 42
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(joined\_data}\SpecialCharTok{$}\NormalTok{total\_searches\_vegan))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 42
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 42 provinces have no google search hits}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

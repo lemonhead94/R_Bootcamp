@@ -171,8 +171,8 @@ pre code {
 </div>
 
 
-<div id="importing-data" class="section level1">
-<h1>Importing Data</h1>
+<div id="importing-data-learning" class="section level1">
+<h1>Importing Data Learning</h1>
 <p>We are gathering data from the following sources…</p>
 <pre class="r"><code># setwd(&quot;/Users/jorit/Library/Mobile\ Documents/com~apple~CloudDocs/Dokumente/HSLU/Semester_01/R_Bootcamp/Group_Work/&quot;)
 restaurants &lt;-read.csv(&quot;./Data/veg_restaurants_US.csv&quot;)
@@ -212,6 +212,9 @@ joined_data &lt;- left_join(joined_data, vegetarian_temp %&gt;% select(province,
 vegan_temp &lt;- google_searches_vegan %&gt;% group_by(province) %&gt;% summarise(total_searches_vegan = sum(search_vegan_res, na.rm = TRUE))
 joined_data &lt;- left_join(joined_data, vegan_temp %&gt;% select(province, total_searches_vegan), by = &quot;province&quot;)</code></pre>
 <p>Checking for missing data</p>
+</div>
+<div id="missing-values" class="section level2">
+<h2>Missing Values</h2>
 <pre class="r"><code>sum(is.na(joined_data$total_searches_vegetarian))</code></pre>
 <pre><code>## [1] 42</code></pre>
 <pre class="r"><code>sum(is.na(joined_data$total_searches_vegan))</code></pre>
