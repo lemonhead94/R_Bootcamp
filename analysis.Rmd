@@ -4,7 +4,6 @@ author: "Jorit Studer and Larissa Eisele"
 date: "2/1/2022"
 output:
   html_document: default
-  word_document: default
   pdf_document: default
 ---
 
