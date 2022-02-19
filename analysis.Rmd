@@ -3,8 +3,9 @@ title: "Vegan & Vegetarian Restaurants"
 author: "Jorit Studer and Larissa Eisele"
 date: "2/1/2022"
 output:
-  pdf_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -94,86 +95,70 @@ sum(is.na(joined_data$total_searches_vegan))
 
 ## Maps and Wordcloud
 
-```{r, warning=FALSE}
+### Vegetarian and Vegan Restaurants in the U.S.
+```{r, figures-side, fig.show="hold", out.width="50%", warning=FALSE, echo=FALSE}
+
+par(mar = c(4, 4, .1, .1))
+
 temp <- read.csv(curl("https://raw.githubusercontent.com/cphalpert/census-regions/master/us%20census%20bureau%20regions%20and%20divisions.csv"))
 states_map <- map_data("state")
 states_map <- left_join(states_map, temp %>% mutate(State = tolower(State)) %>% select(State, State.Code), by = c("region" = "State"))
-states_map <- left_join(states_map, joined_data %>% group_by(province) %>% summarise(Number_Of_Restaurants = n_distinct(id)), by = c("State.Code" = "province"))
+google_search_frequency <- joined_data %>% group_by(province) %>% distinct(province, total_searches_vegan, total_searches_vegetarian) %>% summarise(google_search_frequency = total_searches_vegan + total_searches_vegetarian)
+
+# Map Data
+states_map_google_search_frequency <- left_join(states_map, google_search_frequency, by = c("State.Code" = "province"))
+states_map_number_restaurants_state <- left_join(states_map, joined_data %>% group_by(province) %>% summarise(Number_Of_Restaurants = n_distinct(id)), by = c("State.Code" = "province"))
 joined_data$MeanNormalized <- (joined_data$Mean - min(joined_data$Mean)) / (max(joined_data$Mean) - min(joined_data$Mean))
 
+# Population
 ggplot() +
   # Number of Restaurants by state
-  geom_polygon(data = states_map, aes(long, lat, group = group, fill=Number_Of_Restaurants), color = "white") + 
+  geom_polygon(data = states_map_number_restaurants_state, aes(long, lat, group = group, fill=Number_Of_Restaurants), color = "white") + 
   scale_fill_gradientn("Number of Restaurants in State", colors = c('lightgreen', 'darkgreen'), breaks = seq(from = 0, to = 100, by = 15)) +
   
   # mapping 44 largest cities in the U.S. since 45 is in hawaii
-  geom_point(data=us.cities %>% arrange(pop) %>% tail(44), aes(x=long, y=lat, size = pop/1000000), color = "blue", alpha = 0.2) +
+  geom_point(data=us.cities %>% arrange(pop) %>% tail(44), aes(x=long, y=lat, size = pop/1000000), color = "blue", alpha = 0.4) +
   labs(size="Largest U.S. Cities Population") + scale_size(breaks=c(1, 3, 5, 8),labels=c("1 million","3 million","5 million","8 million"), guide="legend") +
-  
-  
-  # mapping the veg. restaurants excluding hawaii (96753)
-  geom_point(data=joined_data %>% filter(!str_detect(postalCode, "96753")), aes(x=longitude, y=latitude, color = MeanNormalized), size=0.5, alpha = 0.4) +
-  scale_color_gradientn("Affordability (Mean Household Income)", colors = c('red', 'darkorange', 'yellow', 'green'), breaks = seq(from = 0, to = 1, by = 0.25)) +
-  theme_void() + coord_map() +
-  
-  # Infos
-  labs(title = "Vegetarian and Vegan Restaurants",
-              subtitle = "",
-              caption = "Data source: Datafiniti's Business Database")
-
-```
-
-### Mapping Restaurants with population size
-
-```{r, warning=FALSE}
-temp <- read.csv(curl("https://raw.githubusercontent.com/cphalpert/census-regions/master/us%20census%20bureau%20regions%20and%20divisions.csv"))
-states_map <- map_data("state")
-states_map <- left_join(states_map, temp %>% mutate(State = tolower(State)) %>% select(State, State.Code), by = c("region" = "State"))
-states_map <- left_join(states_map, joined_data %>% group_by(province) %>% summarise(Number_Of_Restaurants = n_distinct(id)), by = c("State.Code" = "province"))
-joined_data$MeanNormalized <- (joined_data$Mean - min(joined_data$Mean)) / (max(joined_data$Mean) - min(joined_data$Mean))
-
-ggplot() +
-  # Number of Restaurants by state
-  geom_polygon(data = states_map, aes(long, lat, group = group, fill=Number_Of_Restaurants), color = "white") + 
-  scale_fill_gradientn("Number of Restaurants in State", colors = c('lightgreen', 'darkgreen'), breaks = seq(from = 0, to = 100, by = 15)) +
-  
-  # mapping 44 largest cities in the U.S. since 45 is in hawaii
-  geom_point(data=us.cities %>% arrange(pop) %>% tail(44), aes(x=long, y=lat, size = pop/1000000), color = "blue", alpha = 0.2) +
-  labs(size="Largest U.S. Cities Population") + scale_size(breaks=c(1, 3, 5, 8),labels=c("1 million","3 million","5 million","8 million"), guide="legend") +
-  
   
   # mapping the veg. restaurants excluding hawaii (96753)
   geom_point(data=joined_data %>% filter(!str_detect(postalCode, "96753")), aes(x=longitude, y=latitude), size=0.3) +
-  theme_void() + coord_map() +
-  
-  # Infos
-  labs(title = "Vegetarian and Vegan Restaurants",
-              subtitle = "",
-              caption = "Data source: Datafiniti's Business Database")
-```
+  theme_void() + coord_map() + 
+  theme(plot.title = element_text(face = "bold"), legend.position="bottom", legend.box="vertical", legend.margin=margin(), legend.box.just = "left") +
+  labs(title = "Population")
 
-### Mapping Restaurants with mean household income
-
-```{r, warning=FALSE}
-temp <- read.csv(curl("https://raw.githubusercontent.com/cphalpert/census-regions/master/us%20census%20bureau%20regions%20and%20divisions.csv"))
-states_map <- map_data("state")
-states_map <- left_join(states_map, temp %>% mutate(State = tolower(State)) %>% select(State, State.Code), by = c("region" = "State"))
-states_map <- left_join(states_map, joined_data %>% group_by(province) %>% summarise(Number_Of_Restaurants = n_distinct(id)), by = c("State.Code" = "province"))
-joined_data$MeanNormalized <- (joined_data$Mean - min(joined_data$Mean)) / (max(joined_data$Mean) - min(joined_data$Mean))
-
+# Income
 ggplot() +
   # Number of Restaurants by state
-  geom_polygon(data = states_map, aes(long, lat, group = group, fill=Number_Of_Restaurants), color = "white") + 
+  geom_polygon(data = states_map_number_restaurants_state, aes(long, lat, group = group, fill=Number_Of_Restaurants), color = "white") + 
   scale_fill_gradientn("Number of Restaurants in State", colors = c('lightgreen', 'darkgreen'), breaks = seq(from = 0, to = 100, by = 15)) +
   
   # mapping the veg. restaurants excluding hawaii (96753)
   geom_point(data=joined_data %>% filter(!str_detect(postalCode, "96753")), aes(x=longitude, y=latitude, color = MeanNormalized), size=0.5, alpha = 0.4) +
-  scale_color_gradientn("Normalized Mean Household Income at Restaurant Zip Code", colors = c('red', 'darkorange', 'yellow', 'green'), breaks = seq(from = 0, to = 1, by = 0.25)) +
-  theme_void() + coord_map() +
+  scale_color_gradientn("Normalized Mean Household Income", colors = c('red', 'darkorange', 'yellow', 'green'), breaks = seq(from = 0, to = 1, by = 0.25)) +
+  theme_void() + coord_map() + 
+  theme(plot.title = element_text(face = "bold"), legend.position="bottom", legend.box="vertical", legend.margin=margin(), legend.box.just = "left") +
+  labs(title = "Income") + 
+  guides(fill = guide_colourbar(order = 1))
+
+# Google Search Frequency
+ggplot() +
+  # Number of Google Searches by State
+  geom_polygon(data = states_map_google_search_frequency, aes(long, lat, group = group, fill=google_search_frequency), color = "white") + 
+  scale_fill_gradientn("Google Search Frequency in State", colors = c('lightblue', 'darkblue'), breaks = seq(from = 0, to = 5000, by = 1000)) +
   
-  # Infos
-  labs(title = "Vegetarian and Vegan Restaurants",
-              subtitle = "",
-              caption = "Data source: Datafiniti's Business Database")
+  # mapping the veg. restaurants excluding hawaii (96753)
+  geom_point(data=joined_data %>% filter(!str_detect(postalCode, "96753")), aes(x=longitude, y=latitude), size=0.5, alpha = 0.4, color = "black") +
+  theme_void() + coord_map() + 
+  theme(plot.title = element_text(face = "bold"), legend.position="bottom", legend.box="vertical", legend.margin=margin(0,125), legend.box.just = "left") +
+  labs(title = "Google Search Frequency")
 
 ```
+
+
+
+
+
+
+
+
+
