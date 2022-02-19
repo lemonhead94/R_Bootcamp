@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, messages = FALSE)
-packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr")
+packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse")
 package.check <- lapply(packages, FUN = function(x) {
     if (!require(x, character.only = TRUE)) {
         install.packages(x, dependencies = TRUE)
@@ -49,7 +49,7 @@ We are selecting the following data from the restaurant data set
 ```{r restaurant data, warning=FALSE}
 restaurants <- restaurants %>% select(id, dateAdded, cuisines, latitude, longitude, menus.category, name, province, postalCode)
 restaurants$postalCode <- as.numeric(restaurants$postalCode)
-restaurants <- restaurants %>% mutate(cusinines_split = strsplit(cuisines,","))
+restaurants <- restaurants %>% mutate(cuisines_split = strsplit(cuisines,","))
 ```
 
 Cleaning the missing data from on restaurant...
@@ -129,7 +129,7 @@ ggplot() +
 ggplot() +
   # Number of Restaurants by state
   geom_polygon(data = states_map_number_restaurants_state, aes(long, lat, group = group, fill=Number_Of_Restaurants), color = "white") + 
-  scale_fill_gradientn("Number of Restaurants in State", colors = c('lightgreen', 'darkgreen'), breaks = seq(from = 0, to = 100, by = 15)) +
+  scale_fill_gradientn("Number of Restaurants in State         ", colors = c('lightgreen', 'darkgreen'), breaks = seq(from = 0, to = 100, by = 15)) +
   
   # mapping the veg. restaurants excluding hawaii (96753)
   geom_point(data=joined_data %>% filter(!str_detect(postalCode, "96753")), aes(x=longitude, y=latitude, color = MeanNormalized), size=0.5, alpha = 0.4) +
@@ -153,9 +153,36 @@ ggplot() +
 
 ```
 
+### Vegetarian and Vegan Cuisines
+```{r, warning=FALSE, echo=FALSE}
+df <- as.data.frame(do.call(rbind, lapply(joined_data$cuisines_split, as.data.frame)))
+colnames(df) <- c("cuisines")
 
+# remove leading whitespaces
+df$cuisines <- trimws(df$cuisines)
 
+# additional fixes
+df$cuisines[df$cuisines == 'Dim Sum'] <- 'DimSum'
+df$cuisines[df$cuisines == 'Hot Dogs'] <- 'HotDogs'
+df$cuisines[df$cuisines == 'Fast Food'] <- 'FastFood'
+df$cuisines[df$cuisines == 'Deli Food'] <- 'Deli'
+df$cuisines[df$cuisines == 'Ice Cream and Desserts'] <- 'IceCream and Desserts'
 
+# remove nonsense words
+df <- df %>% filter(!(str_detect(cuisines, "Restaurant|Friendly|Vegetarian|Vegan|Health|Bar|Gluten|Bistro|Take|Local|Organic|Steak|Cater|North|South|Middle")))
+
+# seperate words by slash; the word ' and '; whitespace
+filtered <- df %>% separate_rows(cuisines, sep = "/") %>% separate_rows(cuisines, sep = " and ") %>% separate_rows(cuisines, sep = " ")
+filtered <- filtered %>% filter(!(str_detect(cuisines, "New|Modern|Small|Shops|Lunch|Pacific|American")))
+
+# filtered$cuisines <- str_replace_all(filtered$cuisines, fixed(" "), "")
+
+#filtered %>% distinct(cuisines)
+
+v <- sort(rowSums(as.matrix(TermDocumentMatrix(Corpus((VectorSource(filtered$cuisines)))))),decreasing=TRUE)
+word_frequency_df <- data.frame(word = names(v),freq=v)
+wordcloud2(data=word_frequency_df, size=1, color='random-dark')
+```
 
 
 
