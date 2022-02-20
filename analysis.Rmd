@@ -3,13 +3,17 @@ title: "Vegan & Vegetarian Restaurants"
 author: "Jorit Studer and Larissa Eisele"
 date: "2/1/2022"
 output:
-  pdf_document: default
-  html_document: default
+  bookdown::html_document2: 
+    pandoc_args: [ "--csl", "apa.csl" ]
+  bookdown::pdf_document2:
+    pandoc_args: [ "--csl", "apa.csl" ]
+bibliography: references.bib
+link-citations: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, messages = FALSE)
-packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis")
+packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis", "bookdown")
 package.check <- lapply(packages, FUN = function(x) {
     if (!require(x, character.only = TRUE)) {
         install.packages(x, dependencies = TRUE)
@@ -18,10 +22,10 @@ package.check <- lapply(packages, FUN = function(x) {
 })
 ```
 
+\newpage
 # Introduction
 
-The aim of this paper is to examine the relationship between the number of vegetarian or vegan restaurants, the number of residents, and the average household income in a U.S. zip code, as well as the Google search frequency for vegetarian and vegan restaurants in that state.
-With only a small sample size of 211 restaurants with 10000 menu listings available, this study cannot make a significant prediction of the number of vegetarian restaurants in a zip code.
+The purpose of this paper is to examine the relationship between the number of vegetarian or vegan restaurants [@datafiniti2018], population and median household income for the U.S. zip code [@mpsc2020], and the frequency of Google searches for vegetarian and vegan restaurants in that state [@vegan_google_trends; @vegetarian_google_trends]. With a small sample size of 211 restaurants with 10000 menu items, this study cannot significantly predict the number of vegetarian restaurants in a zip code.
 
 Nevertheless, this paper still gives some insights in regards to vegetarian and vegan offers in the U.S. as well as the demand from the population and if the offers and demand can be explained with demographic insight such as household income.
 
@@ -39,7 +43,7 @@ $$ \text{restaurants} = {\beta}_0 + {\beta}_1 * \text{residents} + {\beta}_2 * \
 We are gathering data from the following sources...
 
 ```{r importing, warning=FALSE}
-#setwd("/Users/jorit/Library/Mobile\ Documents/com~apple~CloudDocs/Dokumente/HSLU/Semester_01/R_Bootcamp/Group_Work/")
+#setwd("/Users/jorit/Library/Mobile Documents/com~apple~CloudDocs/Dokumente/HSLU/Semester_01/R_Bootcamp/Group_Work/R_Bootcamp")
 restaurants <-read.csv("./Data/veg_restaurants_US.csv")
 income_pop_by_zip <- read_excel("./Data/MeanZIP-3.xlsx")
 google_searches_vegetarian <- read_excel("./Data/searches_vegetarian_res.xlsx")
@@ -176,8 +180,13 @@ ggplot() +
 
 ```
 
-### Vegetarian and Vegan Cuisines
-```{r, warning=FALSE, fig.width=5, fig.height=5, echo=FALSE}
+
+
+```{r, eval=knitr::is_html_output(), echo=FALSE}
+knitr::asis_output("### Vegetarian and Vegan Cuisines")
+```
+
+```{r, eval=knitr::is_html_output(), warning=FALSE, fig.width=5, fig.height=5, echo=FALSE}
 # devtools::install_github("lchiffon/wordcloud2") fixed rmarkdown
 df <- as.data.frame(do.call(rbind, lapply(joined_data$cuisines_split, as.data.frame)))
 colnames(df) <- c("cuisines")
@@ -209,11 +218,46 @@ word_frequency_df <- data.frame(word = names(v),freq=v)
 wordcloud_colors <- colorRampPalette(brewer.pal(11,"BrBG"))
 wordcloud2(word_frequency_df, size = 1, minRotation = pi/6, maxRotation = pi/6, rotateRatio = 1, color=rev(wordcloud_colors(32)[seq(1,32,1)]))
 ```
-### Vegetarian and Vegan Cuisines with ggplot since wordcloud2 can not be rendered into pdf...
+```{r, eval=knitr::is_latex_output(), echo=FALSE }
+knitr::asis_output("### Vegetarian and Vegan Cuisines with ggplot since wordcloud2 can not be rendered into pdf...")
+```
 
-```{r, warning=FALSE, fig.width=5, fig.height=5, echo=FALSE}
+```{r, eval=knitr::is_latex_output(), warning=FALSE, fig.width=5, fig.height=5, echo=FALSE}
+df <- as.data.frame(do.call(rbind, lapply(joined_data$cuisines_split, as.data.frame)))
+colnames(df) <- c("cuisines")
+
+# remove leading whitespaces
+df$cuisines <- trimws(df$cuisines)
+
+# additional fixes
+df$cuisines[df$cuisines == 'Dim Sum'] <- 'DimSum'
+df$cuisines[df$cuisines == 'Hot Dogs'] <- 'HotDogs'
+df$cuisines[df$cuisines == 'Fast Food'] <- 'FastFood'
+df$cuisines[df$cuisines == 'Deli Food'] <- 'Deli'
+df$cuisines[df$cuisines == 'Ice Cream and Desserts'] <- 'IceCream and Desserts'
+
+# remove nonsense words
+df <- df %>% filter(!(str_detect(cuisines, "Restaurant|Friendly|Vegetarian|Vegan|Health|Bar|Gluten|Bistro|Take|Local|Organic|Steak|Cater|North|South|Middle")))
+
+# seperate words by slash; the word ' and '; whitespace
+filtered <- df %>% separate_rows(cuisines, sep = "/") %>% separate_rows(cuisines, sep = " and ") %>% separate_rows(cuisines, sep = " ")
+filtered <- filtered %>% filter(!(str_detect(cuisines, "New|Modern|Small|Shops|Lunch|Pacific|American")))
+
+# filtered$cuisines <- str_replace_all(filtered$cuisines, fixed(" "), "")
+
+#filtered %>% distinct(cuisines)
+
+v <- sort(rowSums(as.matrix(TermDocumentMatrix(Corpus((VectorSource(filtered$cuisines)))))),decreasing=TRUE)
+word_frequency_df <- data.frame(word = names(v),freq=v)
+
 ggplot(word_frequency_df, aes(label = word, size = freq, color = freq, angle = 30)) +
   geom_text_wordcloud(shape = "square", rm_outside = TRUE, max_steps = 1, grid_size = .1, eccentricity = .1) +
   scale_size_area(max_size = 10) +
   scale_color_viridis(option = "mako", direction = -1) + theme_void()
 ```
+
+
+# Testing
+
+\newpage
+# References {-}
