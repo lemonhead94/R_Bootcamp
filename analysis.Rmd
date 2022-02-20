@@ -9,14 +9,13 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, messages = FALSE)
-packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse")
+packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis")
 package.check <- lapply(packages, FUN = function(x) {
     if (!require(x, character.only = TRUE)) {
         install.packages(x, dependencies = TRUE)
         library(x, character.only = TRUE)
     }
 })
-# https://plotly.com/ggplot2/bubble-maps/
 ```
 
 # Introduction
@@ -35,7 +34,7 @@ $$ \text{restaurants} = {\beta}_0 + {\beta}_1 * \text{residents} + {\beta}_2 * \
 We are gathering data from the following sources...
 
 ```{r importing, warning=FALSE}
-# setwd("/Users/jorit/Library/Mobile\ Documents/com~apple~CloudDocs/Dokumente/HSLU/Semester_01/R_Bootcamp/Group_Work/")
+#setwd("/Users/jorit/Library/Mobile\ Documents/com~apple~CloudDocs/Dokumente/HSLU/Semester_01/R_Bootcamp/Group_Work/")
 restaurants <-read.csv("./Data/veg_restaurants_US.csv")
 income_pop_by_zip <- read_excel("./Data/MeanZIP-3.xlsx")
 google_searches_vegetarian <- read_excel("./Data/searches_vegetarian_res.xlsx")
@@ -154,7 +153,8 @@ ggplot() +
 ```
 
 ### Vegetarian and Vegan Cuisines
-```{r, warning=FALSE, echo=FALSE}
+```{r, warning=FALSE, fig.width=5, fig.height=5, echo=FALSE}
+# devtools::install_github("lchiffon/wordcloud2") fixed rmarkdown
 df <- as.data.frame(do.call(rbind, lapply(joined_data$cuisines_split, as.data.frame)))
 colnames(df) <- c("cuisines")
 
@@ -181,10 +181,15 @@ filtered <- filtered %>% filter(!(str_detect(cuisines, "New|Modern|Small|Shops|L
 
 v <- sort(rowSums(as.matrix(TermDocumentMatrix(Corpus((VectorSource(filtered$cuisines)))))),decreasing=TRUE)
 word_frequency_df <- data.frame(word = names(v),freq=v)
-wordcloud2(data=word_frequency_df, size=1, color='random-dark')
+
+wordcloud_colors <- colorRampPalette(brewer.pal(11,"BrBG"))
+wordcloud2(word_frequency_df, size = 1, minRotation = pi/6, maxRotation = pi/6, rotateRatio = 1, color=rev(wordcloud_colors(32)[seq(1,32,1)]))
 ```
+### Vegetarian and Vegan Cuisines with ggplot since wordcloud2 can not be rendered into pdf...
 
-
-
-
-
+```{r, warning=FALSE, fig.width=5, fig.height=5, echo=FALSE}
+ggplot(word_frequency_df, aes(label = word, size = freq, color = freq, angle = 30)) +
+  geom_text_wordcloud(shape = "square", rm_outside = TRUE, max_steps = 1, grid_size = .1, eccentricity = .1) +
+  scale_size_area(max_size = 10) +
+  scale_color_viridis(option = "mako", direction = -1) + theme_void()
+```
