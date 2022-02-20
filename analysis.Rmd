@@ -3,8 +3,6 @@ title: "Vegan & Vegetarian Restaurants"
 author: "Jorit Studer and Larissa Eisele"
 date: "2/1/2022"
 output:
-  html_document:
-    df_print: paged
   bookdown::pdf_document2:
     pandoc_args:
     - --csl
@@ -13,7 +11,6 @@ output:
     pandoc_args:
     - --csl
     - apa.csl
-  pdf_document: default
 bibliography: references.bib
 link-citations: yes
 ---
@@ -122,11 +119,11 @@ hist(testing, main = "Household Income by State",
 ```{r}
 #Boxplot Household Income
 head(income_pop_by_zip)
-p <- ggplot(income_pop_by_zip, aes(x= Mean, y = Zip, fill = feed))
-p <- p + geom_boxplot()
-p <- p + theme_classic()
-p <- p + labs(title = "Mean Income by Zip Code")
-p
+#p <- ggplot(income_pop_by_zip, aes(x= Mean, y = Zip, fill = feed))
+#p <- p + geom_boxplot()
+#p <- p + theme_classic()
+#p <- p + labs(title = "Mean Income by Zip Code")
+#p
 ```
 
 
