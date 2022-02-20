@@ -3,17 +3,24 @@ title: "Vegan & Vegetarian Restaurants"
 author: "Jorit Studer and Larissa Eisele"
 date: "2/1/2022"
 output:
-  bookdown::html_document2: 
-    pandoc_args: [ "--csl", "apa.csl" ]
+  html_document:
+    df_print: paged
   bookdown::pdf_document2:
-    pandoc_args: [ "--csl", "apa.csl" ]
+    pandoc_args:
+    - --csl
+    - apa.csl
+  bookdown::html_document2:
+    pandoc_args:
+    - --csl
+    - apa.csl
+  pdf_document: default
 bibliography: references.bib
 link-citations: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, messages = FALSE)
-packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis", "bookdown")
+packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis", "bookdown", "utils")
 package.check <- lapply(packages, FUN = function(x) {
     if (!require(x, character.only = TRUE)) {
         install.packages(x, dependencies = TRUE)
@@ -43,7 +50,7 @@ $$ \text{restaurants} = {\beta}_0 + {\beta}_1 * \text{residents} + {\beta}_2 * \
 We are gathering data from the following sources...
 
 ```{r importing, warning=FALSE}
-#setwd("/Users/jorit/Library/Mobile Documents/com~apple~CloudDocs/Dokumente/HSLU/Semester_01/R_Bootcamp/Group_Work/R_Bootcamp")
+#setwd("/Users/larissaeisele/switchdrive/R-Bootcamp/project-R_Bootcamp")
 restaurants <-read.csv("./Data/veg_restaurants_US.csv")
 income_pop_by_zip <- read_excel("./Data/MeanZIP-3.xlsx")
 google_searches_vegetarian <- read_excel("./Data/searches_vegetarian_res.xlsx")
@@ -100,13 +107,27 @@ In the following Histograms the amount of vegan and vegetarian restaurants are s
 
 
 ```{r}
-# Histogram Vegan & Vegetarian Restaurants by State
-par(mfrow = c(1, 2))
+# Household Income by State
 
-hist(restaurants$province, main = "Vegan & Vegetarian Offers by State", xlab = "province")
+testing <- income_pop_by_zip$Mean
+hist(testing, main = "Household Income by State",
+     xlab = "Household Income")
+
+
 ```
 
 
+## Boxplots
+
+```{r}
+#Boxplot Household Income
+head(income_pop_by_zip)
+p <- ggplot(income_pop_by_zip, aes(x= Mean, y = Zip, fill = feed))
+p <- p + geom_boxplot()
+p <- p + theme_classic()
+p <- p + labs(title = "Mean Income by Zip Code")
+p
+```
 
 
 Checking for missing data
