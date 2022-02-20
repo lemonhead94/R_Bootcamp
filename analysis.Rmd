@@ -1,9 +1,9 @@
 ---
-title: "Vegan & Vegetarian Restaurants"
-author: "Jorit Studer and Larissa Eisele"
-date: "2/1/2022"
 output:
   bookdown::pdf_document2:
+    includes:
+      in_header: preamble.tex
+      before_body: titlepage.tex
     pandoc_args:
     - --csl
     - apa.csl
@@ -11,10 +11,23 @@ output:
     pandoc_args:
     - --csl
     - apa.csl
+  bookdown::word_document2:
+    pandoc_args:
+    - --csl
+    - apa.csl
+toc-title: "Table of Contents"
 bibliography: references.bib
 link-citations: yes
+header-includes:
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancyhead[L]{}
+  - \fancyhead[L]{Vegan and Vegetarian Restaurant Model}
+  - \fancyhead[R]{R-Bootcamp}
+  - \renewcommand{\headrulewidth}{0pt}
+  - \fancyfoot[C]{}
+  - \fancyfoot[R]{\thepage}
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, messages = FALSE)
 packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis", "bookdown", "utils")
@@ -25,18 +38,19 @@ package.check <- lapply(packages, FUN = function(x) {
     }
 })
 ```
-
+\thispagestyle{empty}
 \newpage
 # Introduction
 
-The purpose of this paper is to examine the relationship between the number of vegetarian or vegan restaurants [@datafiniti2018], population and median household income for the U.S. zip code [@mpsc2020], and the frequency of Google searches for vegetarian and vegan restaurants in that state [@vegan_google_trends; @vegetarian_google_trends]. With a small sample size of 211 restaurants with 10000 menu items, this study cannot significantly predict the number of vegetarian restaurants in a zip code.
+Inspired by Veganuary, we discovered a dataset about vegetarian and vegan restaurants in the US [@datafiniti2018]. The dataset was found through a dataset search on Google, hosted on Kaggel. The reason for selecting this dataset was that many useful parameters were already available. The description of the dataset states that it contains data from 18,0000 restaurants. Unfortunately, we only later noticed that only 211 individual restaurants with 10,000 menu items are included in the dataset, as it serves as an advertisement for the Datafiniti Business Database. The entire dataset is only available for purchase, and after consulting with the lecturer (Matteo Tanadini), it was agreed that the study should continue with the less meaningful results.
 
-Nevertheless, this paper still gives some insights in regards to vegetarian and vegan offers in the U.S. as well as the demand from the population and if the offers and demand can be explained with demographic insight such as household income.
+The purpose of this paper is to examine the relationship between the number of vegetarian or vegan restaurants, population and median household income for the U.S. zip code [@mpsc2020], and the frequency of Google searches for vegetarian and vegan restaurants in that state [@vegan_google_trends; @vegetarian_google_trends]. With the small sample size of 211 restaurants and 10000 menu items, this study cannot significantly predict the number of vegetarian restaurants in a zip code.
+Nevertheless, this paper offers some insights into vegetarian and vegan supply in the U.S., as well as the demand and whether demographics, income, and Google searches match up.
 
 
 # Methodology
 
-In a first step relevant data has been researched. The data has been imoported to R and first visualizations were made to get some insights into the data.  
+In a first step relevant data has been researched. The data has been imported to R and first visualizations were made to get some insights into the data.  
 
 
 **Model**
@@ -137,10 +151,11 @@ sum(is.na(joined_data$total_searches_vegan))
 # 42 provinces have no google search hits
 ```
 
+\newpage
 ## Maps and Wordcloud
 
 ### Vegetarian and Vegan Restaurants in the U.S.
-```{r, figures-side, fig.show="hold", out.width="50%", warning=FALSE, echo=FALSE}
+```{r, figures-side, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
 
 par(mar = c(4, 4, .1, .1))
 
@@ -204,7 +219,7 @@ ggplot() +
 knitr::asis_output("### Vegetarian and Vegan Cuisines")
 ```
 
-```{r, eval=knitr::is_html_output(), warning=FALSE, fig.width=5, fig.height=5, echo=FALSE}
+```{r, eval=knitr::is_html_output(), warning=FALSE, fig.width=5, fig.height=5, echo=TRUE}
 # devtools::install_github("lchiffon/wordcloud2") fixed rmarkdown
 df <- as.data.frame(do.call(rbind, lapply(joined_data$cuisines_split, as.data.frame)))
 colnames(df) <- c("cuisines")
@@ -240,7 +255,7 @@ wordcloud2(word_frequency_df, size = 1, minRotation = pi/6, maxRotation = pi/6, 
 knitr::asis_output("### Vegetarian and Vegan Cuisines with ggplot since wordcloud2 can not be rendered into pdf...")
 ```
 
-```{r, eval=knitr::is_latex_output(), warning=FALSE, fig.width=5, fig.height=5, echo=FALSE}
+```{r, eval=knitr::is_latex_output(), warning=FALSE, fig.width=5, fig.height=5, echo=TRUE}
 df <- as.data.frame(do.call(rbind, lapply(joined_data$cuisines_split, as.data.frame)))
 colnames(df) <- c("cuisines")
 
@@ -275,7 +290,7 @@ ggplot(word_frequency_df, aes(label = word, size = freq, color = freq, angle = 3
 ```
 
 
-# Testing
+# Conclusions
 
 \newpage
 # References {-}
