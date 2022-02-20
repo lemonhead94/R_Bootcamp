@@ -3,8 +3,8 @@ title: "Vegan & Vegetarian Restaurants"
 author: "Jorit Studer and Larissa Eisele"
 date: "2/1/2022"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +23,12 @@ package.check <- lapply(packages, FUN = function(x) {
 The aim of this paper is to examine the relationship between the number of vegetarian or vegan restaurants, the number of residents, and the average household income in a U.S. zip code, as well as the Google search frequency for vegetarian and vegan restaurants in that state.
 With only a small sample size of 211 restaurants with 10000 menu listings available, this study cannot make a significant prediction of the number of vegetarian restaurants in a zip code.
 
-Nevertheless, this paper still gives some insights in regards to ...
+Nevertheless, this paper still gives some insights in regards to vegetarian and vegan offers in the U.S. as well as the demand from the population and if the offers and demand can be explained with demographic insight such as household income.
+
+
+# Methodology
+
+In a first step relevant data has been researched. The data has been imoported to R and first visualizations were made to get some insights into the data.  
 
 
 **Model**
@@ -45,6 +50,7 @@ google_searches_vegan <- read_excel("./Data/searches_vegan_res.xlsx")
 
 ### Restaurant Data
 We are selecting the following data from the restaurant data set
+
 ```{r restaurant data, warning=FALSE}
 restaurants <- restaurants %>% select(id, dateAdded, cuisines, latitude, longitude, menus.category, name, province, postalCode)
 restaurants$postalCode <- as.numeric(restaurants$postalCode)
@@ -56,6 +62,7 @@ Cleaning the missing data from on restaurant...
 restaurants[restaurants$id == "AV1Tp59p3D1zeR_xE2DL",]$postalCode <- 94596
 anyNA(restaurants$postalCode) # There are no missing values anymore in postalCode (zip code)
 ```
+
 
 ### Population Size and Mean Household Income Data
 
@@ -80,6 +87,23 @@ joined_data <- left_join(joined_data, vegetarian_temp %>% select(province, total
 vegan_temp <- google_searches_vegan %>% group_by(province) %>% summarise(total_searches_vegan = sum(search_vegan_res, na.rm = TRUE))
 joined_data <- left_join(joined_data, vegan_temp %>% select(province, total_searches_vegan), by = "province")
 ```
+
+# Data Visualization
+
+## Histogram
+
+In the following Histograms the amount of vegan and vegetarian restaurants are shown by state, to get some insights how the data is distributed by the region. 
+
+
+```{r}
+# Histogram Vegan & Vegetarian Restaurants by State
+par(mfrow = c(1, 2))
+
+hist(restaurants$province, main = "Vegan & Vegetarian Offers by State", xlab = "province")
+```
+
+
+
 
 Checking for missing data
 
