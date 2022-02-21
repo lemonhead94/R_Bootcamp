@@ -1,12 +1,7 @@
 ---
 output:
-  bookdown::pdf_document2:
-    includes:
-      in_header: preamble.tex
-      before_body: titlepage.tex
-    pandoc_args:
-    - --csl
-    - apa.csl
+  html_document:
+    df_print: paged
   bookdown::html_document2:
     pandoc_args:
     - --csl
@@ -15,18 +10,26 @@ output:
     pandoc_args:
     - --csl
     - apa.csl
-toc-title: "Table of Contents"
+  bookdown::pdf_document2:
+    includes:
+      in_header: preamble.tex
+      before_body: titlepage.tex
+    pandoc_args:
+    - --csl
+    - apa.csl
+  pdf_document: default
+toc-title: Table of Contents
 bibliography: references.bib
 link-citations: yes
 header-includes:
-  - \usepackage{fancyhdr}
-  - \pagestyle{fancy}
-  - \fancyhead[L]{}
-  - \fancyhead[L]{Vegan and Vegetarian Restaurant Model}
-  - \fancyhead[R]{R-Bootcamp}
-  - \renewcommand{\headrulewidth}{0pt}
-  - \fancyfoot[C]{}
-  - \fancyfoot[R]{\thepage}
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhead[L]{}
+- \fancyhead[L]{Vegan and Vegetarian Restaurant Model}
+- \fancyhead[R]{R-Bootcamp}
+- \renewcommand{\headrulewidth}{0pt}
+- \fancyfoot[C]{}
+- \fancyfoot[R]{\thepage}
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, messages = FALSE)
@@ -110,11 +113,53 @@ vegan_temp <- google_searches_vegan %>% group_by(province) %>% summarise(total_s
 joined_data <- left_join(joined_data, vegan_temp %>% select(province, total_searches_vegan), by = "province")
 ```
 
+
+Checking for missing data
+
+## Missing Values
+
+```{r missing data check google search results, warning=FALSE}
+sum(is.na(joined_data$total_searches_vegetarian))
+sum(is.na(joined_data$total_searches_vegan))
+# 42 provinces have no google search hits
+```
+
+
 # Data Visualization
+
+## Summary Statistics
+
+```{r}
+#mean household income whole U.S.
+summary(income_pop_by_zip)
+```
+
+
+```{r}
+#summarize household income in U.S. 
+income_summary <- income_pop_by_zip %>%
+  group_by(Zip)  %>%
+  summarize(mean=mean(Mean,na.rm=TRUE),
+std_dev =sd(Mean,na.rm=TRUE))
+income_summary
+```
+
+
+```{r}
+#summarize vegan & vegetarian searches
+
+```
 
 ## Histogram
 
 In the following Histograms the amount of vegan and vegetarian restaurants are shown by state, to get some insights how the data is distributed by the region. 
+
+```{r}
+#Vegan and Vegetarian Restaurants by State
+#hist_restaurants_sub <- subset(restaurants, province)$name
+#hist(hist_restaurants_sub, main = "Restaurants by Province",
+ #    xlab = "Province")
+```
 
 
 ```{r}
@@ -123,10 +168,7 @@ In the following Histograms the amount of vegan and vegetarian restaurants are s
 testing <- income_pop_by_zip$Mean
 hist(testing, main = "Household Income by State",
      xlab = "Household Income")
-
-
 ```
-
 
 ## Boxplots
 
@@ -140,16 +182,12 @@ head(income_pop_by_zip)
 #p
 ```
 
+## Scatterplot
 
-Checking for missing data
-
-## Missing Values
-
-```{r missing data check google search results, warning=FALSE}
-sum(is.na(joined_data$total_searches_vegetarian))
-sum(is.na(joined_data$total_searches_vegan))
-# 42 provinces have no google search hits
+```{r}
+#Scatterplot
 ```
+
 
 \newpage
 ## Maps and Wordcloud
