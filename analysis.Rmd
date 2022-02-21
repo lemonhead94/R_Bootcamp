@@ -50,6 +50,10 @@ Inspired by Veganuary, we discovered a dataset about vegetarian and vegan restau
 The purpose of this paper is to examine the relationship between the number of vegetarian or vegan restaurants, population and median household income for the U.S. zip code [@mpsc2020], and the frequency of Google searches for vegetarian and vegan restaurants in that state [@vegan_google_trends; @vegetarian_google_trends]. With the small sample size of 211 restaurants and 10000 menu items, this study cannot significantly predict the number of vegetarian restaurants in a zip code.
 Nevertheless, this paper offers some insights into vegetarian and vegan supply in the U.S., as well as the demand and whether demographics, income, and Google searches match up.
 
+For the following work different R Packages have been used. The following code shows, which packages have been included and a efficient way how to include multiple packages and for the work in a group. 
+
+# !!! should we include your fancy package set up code here?
+
 # !!! should we include here a graphical overview of our data? 
 
 
@@ -67,7 +71,7 @@ The formula above shows the concept of the model. The model aims to explain the 
 
 ## Importing Data
 
-We are gathering data from the following sources...
+The following work is based on three different data sources. We are gathering data from Datafinit through Kaggel (Restaurant Data), Kaggel (Mean household income U.S.) and from Google Trend (Google Search Data).
 
 ```{r importing, warning=FALSE}
 #setwd("/Users/larissaeisele/switchdrive/R-Bootcamp/project-R_Bootcamp")
@@ -181,18 +185,43 @@ hist(testing, main = "Household Income by State",
 ```{r}
 #Boxplot Household Income
 head(income_pop_by_zip)
-#p <- ggplot(income_pop_by_zip, aes(x= Mean, y = Zip, fill = feed))
+#p <- ggplot2(income_pop_by_zip, aes(x= Mean, y = Zip, fill = feed))
 #p <- p + geom_boxplot()
 #p <- p + theme_classic()
 #p <- p + labs(title = "Mean Income by Zip Code")
 #p
 ```
 
+
+```{r}
+# Mean Household income by Zip !! Help
+#ggplot2(income_pop_by_zip, aes(y = Mean, group = Zip, x = Zip)) + 
+#  geom_boxplot(fill=c("green", "lightgreen", "darkgreen"))
+```
+
+```{r}
+# Median Household income by state !! Help
+# income_box <- read_excel("./Data/MeanZIP-3.xlsx")
+# ggplot(income_box,
+  #     aes(x = estimate,
+  #        y = reorder(NAME, estimate))) +
+  #geom_point(color = "green", size = 4) +
+  #scale_x_continuous(labels = scales::dollar) +
+  #theme_minimal(base_size = 12) +
+  #labs(x = "Median estimate",
+   #    y = " ",
+    #   title = "Median household income by state")
+```
+
+
 ## Scatterplot
+
+With scatterplots a relationship between two variables can be visualized. The following scatterplot shows the relationship between the demand of vegan and vegetarian restaurants and the amount of offers by region. 
 
 ```{r}
 #Scatterplot
-```
+# ggplot(joined_data, aes(x = province, y = vegan_searches)) + geom_point()
+``` 
 
 
 \newpage
@@ -335,6 +364,10 @@ ggplot(word_frequency_df, aes(label = word, size = freq, color = freq, angle = 3
 
 
 # Conclusions
+
+# Reflection
+
+Data Quality / Amount of Data 
 
 \newpage
 # References {-}
