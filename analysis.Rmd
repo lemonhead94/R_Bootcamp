@@ -1,6 +1,12 @@
 ---
 output:
-  pdf_document: default
+  bookdown::pdf_document2:
+    includes:
+      in_header: preamble.tex
+      before_body: titlepage.tex
+    pandoc_args:
+    - --csl
+    - apa.csl
   bookdown::html_document2:
     pandoc_args:
     - --csl
@@ -9,15 +15,6 @@ output:
     pandoc_args:
     - --csl
     - apa.csl
-  bookdown::pdf_document2:
-    includes:
-      in_header: preamble.tex
-      before_body: titlepage.tex
-    pandoc_args:
-    - --csl
-    - apa.csl
-  html_document:
-    df_print: paged
 toc-title: Table of Contents
 bibliography: references.bib
 link-citations: yes
@@ -140,24 +137,25 @@ sum(is.na(joined_data$total_searches_vegan))
 ## Summary Statistics
 
 ```{r}
-#mean household income whole U.S.
-summary(income_pop_by_zip)
+# yearly mean household income whole U.S.
+summary(income_pop_by_zip %>% select(Mean, Pop))
 ```
 
 
 ```{r}
 #summarize household income in U.S. 
-income_summary <- income_pop_by_zip %>%
-  group_by(Zip)  %>%
-  summarize(mean=mean(Mean,na.rm=TRUE),
-std_dev =sd(Mean,na.rm=TRUE))
-income_summary
+income_pop_by_zip %>% group_by(Zip)  %>% summarize(mean=mean(Mean,na.rm=TRUE), std_dev =sd(Mean,na.rm=TRUE))
 ```
 
 
 ```{r}
 #summarize vegan & vegetarian searches
+google_search_frequency <- joined_data %>% group_by(province) %>% distinct(province, total_searches_vegan, total_searches_vegetarian) %>% summarise(google_search_frequency = total_searches_vegan + total_searches_vegetarian)
 
+ggplot(google_search_frequency, aes(x=province, y=google_search_frequency, fill=province)) + 
+  geom_bar(stat = "identity") +
+  ggtitle("Google Searches by State") + xlab("State") + ylab("Number of Google Searches") + labs(fill='State') +
+  theme_minimal()
 ```
 
 ## Histogram
@@ -166,25 +164,36 @@ In the following Histograms the amount of vegan and vegetarian restaurants are s
 
 ```{r}
 #Vegan and Vegetarian Restaurants by State
-#hist_restaurants_sub <- subset(restaurants, province)$name
-#hist(hist_restaurants_sub, main = "Restaurants by Province",
- #    xlab = "Province")
+number_of_res <- joined_data %>% group_by(province) %>% summarise(Number_Of_Restaurants = n_distinct(id))
+ggplot(number_of_res, aes(x=province, y=Number_Of_Restaurants, fill=province)) + 
+  geom_bar(stat = "identity") +
+  ggtitle("Number of Restaurants by State") + xlab("State") + ylab("Number of Restaurants") + labs(fill='State') +
+  theme_minimal()
 ```
 
 
 ```{r}
-# Household Income by State
+# Mean Household income by State
+temp <- joined_data %>% distinct(id, province, Mean) %>% group_by(province) %>% summarise(Avg_Mean_Province = (sum(Mean) / n_distinct(Mean))) 
+ggplot(data=temp, aes(x=province, y=Avg_Mean_Province, fill=province)) +
+  geom_bar(stat="identity") +
+  ggtitle("Yearly Mean Household Income by State") + xlab("State") + ylab("Average Mean Household Income") + labs(fill='State') +
+  theme_minimal()
 
-testing <- income_pop_by_zip$Mean
-hist(testing, main = "Household Income by State",
-     xlab = "Household Income")
 ```
 
 ## Boxplots
 
 ```{r}
 #Boxplot Household Income
-head(income_pop_by_zip)
+#temp <- joined_data %>% distinct(id, province, Mean) %>% group_by(province) %>% summarise(Avg_Mean_Province = (sum(Mean) / n_distinct(Mean))) 
+#ggplot(data=temp, aes(x=province, y=Avg_Mean_Province, fill=province)) +
+#  geom_boxplot(stat="identity") +
+#  ggtitle("Yearly Mean Household Income by State") + xlab("State") + ylab("Average Mean Household Income") + labs(fill='State') +
+#  theme_minimal()
+
+
+#head(income_pop_by_zip)
 #p <- ggplot2(income_pop_by_zip, aes(x= Mean, y = Zip, fill = feed))
 #p <- p + geom_boxplot()
 #p <- p + theme_classic()
@@ -192,12 +201,6 @@ head(income_pop_by_zip)
 #p
 ```
 
-
-```{r}
-# Mean Household income by Zip !! Help
-#ggplot2(income_pop_by_zip, aes(y = Mean, group = Zip, x = Zip)) + 
-#  geom_boxplot(fill=c("green", "lightgreen", "darkgreen"))
-```
 
 ```{r}
 # Median Household income by state !! Help
@@ -221,6 +224,8 @@ With scatterplots a relationship between two variables can be visualized. The fo
 ```{r}
 #Scatterplot
 # ggplot(joined_data, aes(x = province, y = vegan_searches)) + geom_point()
+
+
 ``` 
 
 
