@@ -1,7 +1,6 @@
 ---
 output:
-  html_document:
-    df_print: paged
+  pdf_document: default
   bookdown::html_document2:
     pandoc_args:
     - --csl
@@ -17,7 +16,8 @@ output:
     pandoc_args:
     - --csl
     - apa.csl
-  pdf_document: default
+  html_document:
+    df_print: paged
 toc-title: Table of Contents
 bibliography: references.bib
 link-citations: yes
@@ -50,14 +50,20 @@ Inspired by Veganuary, we discovered a dataset about vegetarian and vegan restau
 The purpose of this paper is to examine the relationship between the number of vegetarian or vegan restaurants, population and median household income for the U.S. zip code [@mpsc2020], and the frequency of Google searches for vegetarian and vegan restaurants in that state [@vegan_google_trends; @vegetarian_google_trends]. With the small sample size of 211 restaurants and 10000 menu items, this study cannot significantly predict the number of vegetarian restaurants in a zip code.
 Nevertheless, this paper offers some insights into vegetarian and vegan supply in the U.S., as well as the demand and whether demographics, income, and Google searches match up.
 
+# !!! should we include here a graphical overview of our data? 
+
 
 # Methodology
 
-In a first step relevant data has been researched. The data has been imported to R and first visualizations were made to get some insights into the data.  
+In a first step relevant data has been researched. The data has been imported to R and first visualizations were made to get some insights into the data. The programming language R is used for the calculations in the following documents. For the sake simplicity not all codes are included. The whole code can be found in the original rmarkdown file. 
+
+In the following document different calculations and plotting methods are applied. The different methods should reflect the teaching content from the R-Bootcamp as well as knowledge the Authors has been achived by themselves during the learning process. 
 
 
 **Model**
 $$ \text{restaurants} = {\beta}_0 + {\beta}_1 * \text{residents} + {\beta}_2 * \text{income} + {\beta}_3 * \text{searches} $$
+The formula above shows the concept of the model. The model aims to explain the offers of vegetarian and vegan restaurants in the U.S. based on the demand in the different regions. The demand is interpret by the amount of searches on "vegan restaurants" and "vegetarian restaurants". Furthermore the model aims to explain a possible correlation between the offering and the demand in regards to the mean household income.
+
 
 ## Importing Data
 
