@@ -146,6 +146,10 @@ sum(is.na(joined_data$total_searches_vegan))
 
 ## Summary Statistics
 
+In a first step we took a closer look into our data sources. With th following summary statistics on the mean income and population by Zip code [@mpsc2020] various insights can be gained. Regarding the Mean income, the following table shows the data is not cleaned as we have 7 missing values. However, the missing values do not influence our further analysis, therefore we decided to proceed with them. With regards to the insights, the table shows that the the difference between the income is very high. We can imagine that this is related to different living situations. For example, the data set may also include students with very low incomes, as well as households with two high earners. The summary statistic on the Population by Zipcode shows that in one Zipcode it seems that only one person is registered. We are aware that this is most probably not realistic but anyway we decided to use the data set for our analysis. Another interesting insight is that in the U.S. population by Zipcode has a Mean Population about 9193 which is equivalent to a small town in Switzerland.
+
+
+
 ```{r}
 # yearly mean household income whole U.S.
 summary(income_pop_by_zip %>% select(Mean, Pop))
