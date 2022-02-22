@@ -27,7 +27,7 @@ header-includes:
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, messages = FALSE)
-packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis", "bookdown", "utils")
+packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis", "bookdown", "utils", "leaps", "broom")
 package.check <- lapply(packages, FUN = function(x) {
     if (!require(x, character.only = TRUE)) {
         install.packages(x, dependencies = TRUE)
@@ -242,23 +242,119 @@ ggplot(data=temp, aes(x=province, y=Avg_Mean_Province, fill=province)) +
 
 ## Scatterplot
 
-With scatterplots a relationship between two variables can be visualized. The following scatterplot shows the relationship between the demand of vegan and vegetarian restaurants and the amount of offers by region. 
-
 ```{r}
-#Scatterplot
-# ggplot(joined_data, aes(x = province, y = vegan_searches)) + geom_point()
+number_of_res <- joined_data %>% group_by(province) %>% 
+  summarise(Number_Of_Restaurants_In_Province = n_distinct(id))
+unique_res_data <- joined_data %>% distinct(id, 
+                                            Pop, 
+                                            Mean, 
+                                            total_searches_vegetarian, 
+                                            total_searches_vegan, province)
+unique_res_data <- left_join(unique_res_data, number_of_res %>% 
+                           select(province, Number_Of_Restaurants_In_Province), 
+                           by = "province"
+                           )
+colnames(unique_res_data) <- c("ID", 
+                               "State", 
+                               "Mean Household Income at Zip Code", 
+                               "Population Size at Zip Code", 
+                               "Google Search Frequency for Vegetarian Restaurant", 
+                               "Google Search Frequency for Vegan Restaurant", 
+                               "Number of Restaurants in State")
+```
 
-
+With scatterplots a relationship between two variables can be visualized. The following scatterplot shows the relationship between the demand of vegan and vegetarian restaurants and the amount of offers by region. 
+```{r, echo=FALSE}
+pairs(unique_res_data %>% select(`Number of Restaurants in State`, `Population Size at Zip Code`, `Mean Household Income at Zip Code`, `Google Search Frequency for Vegetarian Restaurant`, `Google Search Frequency for Vegan Restaurant` ))
 ``` 
 
+# Modeling
+```{r}
+fit <- lm(`Number of Restaurants in State` ~ `Population Size at Zip Code` + 
+            `Mean Household Income at Zip Code` + 
+            `Google Search Frequency for Vegetarian Restaurant` + 
+            `Google Search Frequency for Vegan Restaurant`, 
+          data=unique_res_data)
+summary(fit)
+```
+## Model
+
+\[
+\begin{aligned}
+\text{Number of Restaurants in a State} &= -34.59 \\
+ & + 0.0007341 * \text{Population} \\
+ & + 0.0001898 * \text{Mean Household Income} \\
+ & + 0.9301 * \text{Google Search Frequency for Vegetarian Restaurant} \\
+ & - 0.05598 * \text{Google Search Frequency for Vegan Restaurant}
+\end{aligned}
+\]
 
 \newpage
-## Maps and Wordcloud
+## Interpretation
 
-### Vegetarian and Vegan Restaurants in the U.S.
-```{r, figures-side, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
+- The R-squared seems to indicate that ~56% of the variability of the data around its mean is explained by the model.
+  The F-statistics p-value is below the significance level of 0.05% and thus significant, hence we reject the null hypothesis. 
+  There is at least one $\beta$ significantly different from 0. Thus at least one variable contributes significantly to the model.
+  Moreover based on the p-value's $\beta_{1}$, $\beta_{2}$, $\beta_{3}$ and $\beta_{4}$ all seem to significantly contribute to the model.
+- With no population,  no income, and no Google searches there are negative ~35 restaurants in a state. 
+- For each additional resident in U.S. state the amount of vegetarian/vegan restaurants increases by 0.0007341.
+  Therefore, there is approximately one restaurant for every 1'400 residents at a specific zip code in a given state.
+- For each $ in Mean Household Income the number of restaurants increases by 0.0001898.
+  Thus, for approximately $5300 in Mean Household Income the number of restaurants increases by one for a given state.
+- For every Google search with the term 'Vegetarian Restaurant' the number of restaurants increases by 0.9301.
+- For every Google search with the term 'Vegan Restaurant' the number of restaurants decreases by 0.05598.
 
+
+
+## Most significant predictors
+```{r}
+reg_test <- unique_res_data %>% select(`Number of Restaurants in State`, 
+                                       `Population Size at Zip Code`,
+                                       `Mean Household Income at Zip Code`,
+                                       `Google Search Frequency for Vegetarian Restaurant`,
+                                       `Google Search Frequency for Vegan Restaurant`)
+reg <- regsubsets(`Number of Restaurants in State` ~ ., 
+                  data = reg_test, 
+                  method = "forward", 
+                  nvmax = 6)
+summary(reg)$which
+```
+
+Based on forward algorithm the predictors **population and mean household income** are most often included in the model (i.e most significant).
+
+## Residuals
+
+```{r, fig.show="hold", out.width="50%", warning=TRUE, echo=FALSE}
 par(mar = c(4, 4, .1, .1))
+model.diag.metrics <- augment(fit)
+# Population
+ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, `Population Size at Zip Code`)) +
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = `Number of Restaurants in State`, yend = .fitted), color = "red", size = 0.3)
+# Income
+ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, `Mean Household Income at Zip Code`)) +
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = `Number of Restaurants in State`, yend = .fitted), color = "red", size = 0.3)
+# Google Search Frequency for Vegetarian Restaurant
+ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, `Google Search Frequency for Vegetarian Restaurant`)) +
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = `Number of Restaurants in State`, yend = .fitted), color = "red", size = 0.3)
+# Google Search Frequency for Vegan Restaurant
+ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, `Google Search Frequency for Vegan Restaurant`)) +
+  geom_point() +
+  stat_smooth(method = lm, se = FALSE) +
+  geom_segment(aes(xend = `Number of Restaurants in State`, yend = .fitted), color = "red", size = 0.3)
+```
+There does not appear to be a clear pattern in the residual plots, however NY at 110 and CA at 33 are clearly outliers in this data set.
+This is most likely due to the fact that the data set contains only a portion of the full data set.
+
+\newpage
+# Chater of Choice: Maps, Wordcloud and Bookdown
+
+```{r, figures-side, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
 
 temp <- read.csv(
   curl("https://raw.githubusercontent.com/cphalpert/census-regions/master/us%20census%20bureau%20regions%20and%20divisions.csv")
@@ -338,6 +434,7 @@ ggplot() +
   labs(title = "Income") + 
   guides(fill = guide_colourbar(order = 1))
 
+par(mar = c(0, 5, 0, 0))
 # Google Search Frequency
 ggplot() +
   # Number of Google Searches by State
@@ -365,7 +462,7 @@ ggplot() +
 ```
 
 ```{r, eval=knitr::is_html_output(), echo=knitr::is_html_output() }
-knitr::asis_output("### Vegetarian and Vegan Cuisines (with wordcloud2)")
+knitr::asis_output("## Vegetarian and Vegan Cuisines (with wordcloud2)")
 ```
 
 ```{r, eval=knitr::is_html_output(), warning=FALSE, fig.width=5, fig.height=5, echo=knitr::is_html_output()}
@@ -406,7 +503,7 @@ wordcloud2(word_frequency_df, size = 1, minRotation = pi/6, maxRotation = pi/6,
 ```
 
 ```{r, eval=knitr::is_latex_output(), echo=knitr::is_latex_output() }
-knitr::asis_output("### Vegetarian and Vegan Cuisines (with ggwordcloud)")
+knitr::asis_output("## Vegetarian and Vegan Cuisines (with ggwordcloud)")
 ```
 
 ```{r, eval=knitr::is_latex_output(), warning=FALSE, fig.width=5, fig.height=5, echo=knitr::is_latex_output()}
@@ -448,6 +545,16 @@ ggplot(word_frequency_df, aes(label = word, size = freq,
   scale_size_area(max_size = 10) +
   scale_color_viridis(option = "mako", direction = -1) + theme_void()
 ```
+
+## Bookdown
+
+This paper was optimized using the Bookdown package:
+
+- a custom title page done in Latex
+- a table of contents with roman lettering
+- custom header and footer notations
+- references in APA7 using BibTex
+- optimized exports for HTML (interactive) and PDF (static)
 
 \newpage
 
