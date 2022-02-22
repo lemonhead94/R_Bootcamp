@@ -75,10 +75,10 @@ The following work is based on three different data sources. We are gathering da
 
 ```{r importing, warning=FALSE}
 #setwd("/Users/larissaeisele/switchdrive/R-Bootcamp/project-R_Bootcamp")
-restaurants <-read.csv("./data/veg_restaurants_US.csv")
-income_pop_by_zip <- read_excel("./data/MeanZIP-3.xlsx")
-google_searches_vegetarian <- read_excel("./data/searches_vegetarian_res.xlsx")
-google_searches_vegan <- read_excel("./data/searches_vegan_res.xlsx")
+restaurants <-read.csv("./Data/veg_restaurants_US.csv")
+income_pop_by_zip <- read_excel("./Data/MeanZIP-3.xlsx")
+google_searches_vegetarian <- read_excel("./Data/searches_vegetarian_res.xlsx")
+google_searches_vegan <- read_excel("./Data/searches_vegan_res.xlsx")
 ```
 
 ## Data Processing
