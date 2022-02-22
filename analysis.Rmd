@@ -2,28 +2,25 @@
 output:
   bookdown::pdf_document2:
     includes:
-      in_header: preamble.tex
-      before_body: titlepage.tex
+      in_header: latex/preamble.tex
+      before_body: latex/titlepage.tex
     pandoc_args:
     - --csl
-    - apa.csl
+    - references/apa.csl
   bookdown::html_document2:
     pandoc_args:
     - --csl
-    - apa.csl
+    - references/apa.csl
   bookdown::word_document2:
     pandoc_args:
     - --csl
-    - apa.csl
+    - references/apa.csl
 toc-title: Table of Contents
-bibliography: references.bib
+bibliography: references/references.bib
 link-citations: yes
 header-includes:
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
-- \fancyhead[L]{}
-- \fancyhead[L]{Vegan and Vegetarian Restaurant Model}
-- \fancyhead[R]{R-Bootcamp}
 - \renewcommand{\headrulewidth}{0pt}
 - \fancyfoot[C]{}
 - \fancyfoot[R]{\thepage}
@@ -38,8 +35,14 @@ package.check <- lapply(packages, FUN = function(x) {
     }
 })
 ```
-\thispagestyle{empty}
+\fancyhead[LR]{}
+\pagenumbering{roman}
+
 \newpage
+\cleardoublepage
+\pagenumbering{arabic}
+\fancyhead[L]{Vegan and Vegetarian Restaurant Model}
+\fancyhead[R]{R-Bootcamp}
 # Introduction
 
 Inspired by Veganuary, we discovered a dataset about vegetarian and vegan restaurants in the US [@datafiniti2018]. The dataset was found through a dataset search on Google, hosted on Kaggel. The reason for selecting this dataset was that many useful parameters were already available. The description of the dataset states that it contains data from 18,0000 restaurants. Unfortunately, we only later noticed that only 211 individual restaurants with 10,000 menu items are included in the dataset, as it serves as an advertisement for the Datafiniti Business Database. The entire dataset is only available for purchase, and after consulting with the lecturer (Matteo Tanadini), it was agreed that the study should continue with the less meaningful results.
@@ -72,10 +75,10 @@ The following work is based on three different data sources. We are gathering da
 
 ```{r importing, warning=FALSE}
 #setwd("/Users/larissaeisele/switchdrive/R-Bootcamp/project-R_Bootcamp")
-restaurants <-read.csv("./Data/veg_restaurants_US.csv")
-income_pop_by_zip <- read_excel("./Data/MeanZIP-3.xlsx")
-google_searches_vegetarian <- read_excel("./Data/searches_vegetarian_res.xlsx")
-google_searches_vegan <- read_excel("./Data/searches_vegan_res.xlsx")
+restaurants <-read.csv("./data/veg_restaurants_US.csv")
+income_pop_by_zip <- read_excel("./data/MeanZIP-3.xlsx")
+google_searches_vegetarian <- read_excel("./data/searches_vegetarian_res.xlsx")
+google_searches_vegan <- read_excel("./data/searches_vegan_res.xlsx")
 ```
 
 ## Data Processing
@@ -375,4 +378,4 @@ ggplot(word_frequency_df, aes(label = word, size = freq, color = freq, angle = 3
 Data Quality / Amount of Data 
 
 \newpage
-# References {-}
+# References
