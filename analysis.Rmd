@@ -450,11 +450,15 @@ ggplot(word_frequency_df, aes(label = word, size = freq,
 ```
 
 \newpage
-# Conclusions
 
-# Reflection
+# Reflection and Conclusion on the Project
 
 Data Quality / Amount of Data 
+
+# Conclusion for ourselves 
+
+The R-Bootcamp Week was for both of us very valuable and the content of the course covered various important material for our further studies as well as working life.The main learning process for us was achieved through the final project. It was very instructive to work independently on a project and to deepen and expand the basics we had learned. We are both positively surprised by our learning curve.
+
 
 \newpage
 # References
