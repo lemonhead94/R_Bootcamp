@@ -7,11 +7,11 @@ output:
     pandoc_args:
     - --csl
     - apa.csl
-  bookdown::html_document2:
+  bookdown::word_document2:
     pandoc_args:
     - --csl
     - apa.csl
-  bookdown::word_document2:
+  bookdown::html_document2:
     pandoc_args:
     - --csl
     - apa.csl
