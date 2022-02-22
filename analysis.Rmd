@@ -27,7 +27,7 @@ header-includes:
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, messages = FALSE)
-packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis", "bookdown", "utils", "leaps", "broom")
+packages <- c("dplyr","readxl", "curl", "ggplot2", "ggrepel", "maps", "plotly", "stringr", "tm", "wordcloud2", "tidyverse", "RColorBrewer", "ggwordcloud", "viridis", "bookdown", "utils", "leaps", "GGally")
 package.check <- lapply(packages, FUN = function(x) {
     if (!require(x, character.only = TRUE)) {
         install.packages(x, dependencies = TRUE)
@@ -168,21 +168,6 @@ income_pop_by_zip %>% group_by(Zip) %>%
   summarize(mean=mean(Mean,na.rm=TRUE), std_dev =sd(Mean,na.rm=TRUE))
 ```
 
-
-```{r}
-#summarize vegan & vegetarian searches
-google_search_frequency <- joined_data %>% group_by(province) %>% 
-  distinct(province, total_searches_vegan, total_searches_vegetarian) %>% 
-  summarise(google_search_frequency = total_searches_vegan + total_searches_vegetarian)
-
-ggplot(google_search_frequency, 
-       aes(x=province, y=google_search_frequency, fill=province)) + 
-  geom_bar(stat = "identity") +
-  ggtitle("Google Searches by State") + 
-  xlab("State") + ylab("Number of Google Searches") + labs(fill='State') +
-  theme_minimal()
-```
-
 ## Histogram
 
 In the following Histograms the amount of vegan and vegetarian restaurants are shown by state, to get some insights how the data is distributed by the region. 
@@ -211,40 +196,49 @@ ggplot(data=temp, aes(x=province, y=Avg_Mean_Province, fill=province)) +
 
 ```
 
+```{r}
+# Population by State
+temp <- joined_data %>% distinct(id, province, Pop) %>% group_by(province) %>% 
+  summarise(Avg_Pop = (sum(Pop) / n_distinct(Pop))) 
+ggplot(data=temp, aes(x=province, y=Avg_Pop, fill=province)) +
+  geom_bar(stat="identity") +
+  ggtitle("Population by State") + 
+  xlab("State") + ylab("Average Population") + labs(fill='State') +
+  theme_minimal()
+```
+
+```{r}
+#summarize vegan & vegetarian searches
+google_search_frequency <- joined_data %>% group_by(province) %>% 
+  distinct(province, total_searches_vegan, total_searches_vegetarian) %>% 
+  summarise(google_search_frequency = total_searches_vegan + total_searches_vegetarian)
+
+ggplot(google_search_frequency, 
+       aes(x=province, y=google_search_frequency, fill=province)) + 
+  geom_bar(stat = "identity") +
+  ggtitle("Google Searches by State") + 
+  xlab("State") + ylab("Number of Google Searches") + labs(fill='State') +
+  theme_minimal()
+```
+
 ## Boxplots
 
 ```{r}
 #Boxplot Household Income
-#temp <- joined_data %>% distinct(id, province, Mean) %>% group_by(province) %>% summarise(Avg_Mean_Province = (sum(Mean) / n_distinct(Mean))) 
-#ggplot(data=temp, aes(x=province, y=Avg_Mean_Province, fill=province)) +
-#  geom_boxplot(stat="identity") +
-#  ggtitle("Yearly Mean Household Income by State") + xlab("State") + ylab("Average Mean Household Income") + labs(fill='State') +
-#  theme_minimal()
-
-
-#head(income_pop_by_zip)
-#p <- ggplot2(income_pop_by_zip, aes(x= Mean, y = Zip, fill = feed))
-#p <- p + geom_boxplot()
-#p <- p + theme_classic()
-#p <- p + labs(title = "Mean Income by Zip Code")
-#p
+ggplot(data=joined_data, aes(x=province, y=Mean, color=province)) +
+  geom_boxplot(alpha=1) +
+  ggtitle("Yearly Mean Household Income by State") + xlab("State") + ylab("Mean Household Income") + labs(fill='State') +
+  theme_minimal()
 ```
 
 
 ```{r}
-# Median Household income by state !! Help
-# income_box <- read_excel("./Data/MeanZIP-3.xlsx")
-# ggplot(income_box,
-  #     aes(x = estimate,
-  #        y = reorder(NAME, estimate))) +
-  #geom_point(color = "green", size = 4) +
-  #scale_x_continuous(labels = scales::dollar) +
-  #theme_minimal(base_size = 12) +
-  #labs(x = "Median estimate",
-   #    y = " ",
-    #   title = "Median household income by state")
+#Boxplot Population
+ggplot(data=joined_data, aes(x=province, y=Pop, color=province)) +
+  geom_boxplot(alpha=1) +
+  ggtitle("Population") + xlab("State") + ylab("Population") + labs(fill='State') +
+  theme_minimal()
 ```
-
 
 ## Scatterplot
 
@@ -271,7 +265,9 @@ colnames(unique_res_data) <- c("ID",
 
 With scatterplots a relationship between two variables can be visualized. The following scatterplot shows the relationship between the demand of vegan and vegetarian restaurants and the amount of offers by region. 
 ```{r, echo=FALSE}
-pairs(unique_res_data %>% select(`Number of Restaurants in State`, `Population Size at Zip Code`, `Mean Household Income at Zip Code`, `Google Search Frequency for Vegetarian Restaurant`, `Google Search Frequency for Vegan Restaurant` ))
+temp <- unique_res_data %>% select(`Number of Restaurants in State`, `Population Size at Zip Code`, `Mean Household Income at Zip Code`, `Google Search Frequency for Vegetarian Restaurant`, `Google Search Frequency for Vegan Restaurant`)
+
+ggpairs(temp, aes(alpha = 0.4))
 ``` 
 
 # Modeling
@@ -329,10 +325,8 @@ Map one shows the population size referring to the amount of restaurants. It can
 #### Google search frequency by numbers of restaurants
 
 
-```{r, figures-side, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
-
 ## Most significant predictors
-```{r}
+```{r, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
 reg_test <- unique_res_data %>% select(`Number of Restaurants in State`, 
                                        `Population Size at Zip Code`,
                                        `Mean Household Income at Zip Code`,
@@ -379,7 +373,7 @@ This is most likely due to the fact that the data set contains only a portion of
 \newpage
 # Chater of Choice: Maps, Wordcloud and Bookdown
 
-```{r, figures-side, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
+```{r, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
 
 temp <- read.csv(
   curl("https://raw.githubusercontent.com/cphalpert/census-regions/master/us%20census%20bureau%20regions%20and%20divisions.csv")
