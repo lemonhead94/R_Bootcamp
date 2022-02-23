@@ -253,8 +253,9 @@ A boxplot can be used to graphically display the distribution of at least one or
 #Boxplot Household Income
 ggplot(data=joined_data, aes(x=province, y=Mean, color=province)) +
   geom_boxplot(alpha=1) +
-  ggtitle("Yearly Mean Household Income by State") + xlab("State") + ylab("Mean Household Income") + labs(fill='State') +
-  theme_minimal()
+  ggtitle("Yearly Mean Household Income by State") + 
+  xlab("State") + ylab("Mean Household Income") + labs(color='State') +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45))
 ```
 
 ### Population
@@ -265,8 +266,8 @@ The following illustrates the distribution of the population by state, again the
 #Boxplot Population
 ggplot(data=joined_data, aes(x=province, y=Pop, color=province)) +
   geom_boxplot(alpha=1) +
-  ggtitle("Population") + xlab("State") + ylab("Population") + labs(fill='State') +
-  theme_minimal()
+  ggtitle("Population") + xlab("State") + ylab("Population") + labs(color='State') +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45))
 ```
 
 ## Scatterplot
