@@ -38,8 +38,6 @@ package.check <- lapply(packages, FUN = function(x) {
 In R-Studio click on the arrow on Knit then select "Knit to pdf_document2" or "Knit to pdf_html2". 
 *The following project was compiled using RStudio 2021.09.2 Build 382 and R version 4.1.2 (2021-11-01).*
 
-
-
 ## Remarks
 
 The chapter of choice for this paper are Maps, WordClouds and Bookdown.

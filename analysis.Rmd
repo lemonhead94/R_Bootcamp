@@ -50,15 +50,14 @@ Inspired by Veganuary, we discovered a dataset about vegetarian and vegan restau
 The purpose of this paper is to examine the relationship between the number of vegetarian or vegan restaurants, population and median household income for the U.S. zip code [@mpsc2020], and the frequency of Google searches for vegetarian and vegan restaurants in that state [@vegan_google_trends; @vegetarian_google_trends]. With the small sample size of 211 restaurants and 10000 menu items, this study cannot significantly predict the number of vegetarian restaurants in a zip code.
 Nevertheless, this paper offers some insights into vegetarian and vegan supply in the U.S., as well as the demand and whether demographics, income, and Google searches match up.
 
-For the following work, different R Packages have been used. The respective packages can be found in the original rmarkdown file. 
-
+For the following work, different R packages have been used. The respective packages and their installation can be found in the original R Markdown file or the README. 
 
 
 # Methodology
 
-In a first step relevant data has been researched. The data has been imported to R and first visualizations were made to get some insights into the data. The programming language R is used for the calculations in the following documents. For the sake simplicity not all codes are included. The whole code can be found in the original rmarkdown file. 
+The first step was to research the relevant data. The data was imported into R and first visualizations were created to get an insight into the data. The R programming language was used for the calculations in the following document. For simplicity, not all of the code is included. However, all code can be found in the original R Markdown file. 
 
-In the following document different calculations and plotting methods are applied. The different methods should reflect the teaching content from the R-Bootcamp as well as knowledge the Authors has been achived by themselves during the learning process. 
+In the following document, different calculation and presentation methods are used. The different methods are intended to reflect both the teaching content from the R-Bootcamp and the knowledge that the authors have gained during the learning process itself. 
 
 
 **Model**
@@ -66,7 +65,7 @@ In the following document different calculations and plotting methods are applie
 
 $$ \text{restaurants} = {\beta}_0 + {\beta}_1 * \text{residents} + {\beta}_2 * \text{income} + {\beta}_3 * \text{searches} $$
 
-The formula above shows the concept of the model. The model aims to explain the offers of vegetarian and vegan restaurants in the U.S. based on the demand in the different regions. The demand is interpret by the amount of searches on "vegan restaurants" and "vegetarian restaurants". Furthermore the model aims to explain a possible correlation between the offering and the demand in regards to the mean household income. 
+The formula above illustrates our original concept for the model. The model aims to explain the supply of vegetarian and vegan restaurants in the US based on demand in different regions. Demand is interpreted by the number of searches for "vegan restaurants" and "vegetarian restaurants." In addition, the model is designed to explain a possible relationship between supply and demand in terms of mean household income and population size. 
 
 ## Importing Data
 
@@ -87,7 +86,7 @@ google_searches_vegan <- read_excel("./Data/searches_vegan_res.xlsx")
 
 ### Restaurant Data
 
-As a first step, we took a closer look into the restaurant data and decided which parameter was needed. With the following code, we're selecting the relevant parameter. Further, we had to change the type of zip code to numeric.
+As a first step, we took a closer look into the restaurant data and decided which parameter was needed. With the following code, we are selecting the relevant parameter. Further, we had to change the type of zip code to numeric and create a new row containing the cuisines served in the restaurant as a list.
 
 ```{r restaurant data, warning=FALSE}
 restaurants <- restaurants %>% select(id, dateAdded, cuisines, latitude, 
@@ -107,7 +106,7 @@ anyNA(restaurants$postalCode) # There are no missing values anymore in postalCod
 
 ### Population Size and Mean Household Income Data
 
-To enrich our restaurant data, we joined the mean house income by zip code data. We did a left join with the join key of the zip codes of the two datasets.
+To enrich our restaurant data, we merged it with the mean household income and population size by zip code. This was done using a left join with the key being our zip code.
 
 
 **Joining the Data**
@@ -124,9 +123,7 @@ sum(is.na(joined_data$Pop)) # all postal codes have a population
 
 ### Google Search Data
 
-During the project, it occurred to us that it would be interesting to compare the demand with the supply of vegetarian and vegan restaurants. However, no data on vegetarian or vegan diets could be found from the U.S. population. Therefore, we decided to show the demand using Google search data. Therefore, we used the search query for "vegetarian restaurant" and "vegan restaurant" via the website of [@https://trends.google.de/]. The last 5 years were chosen as the time period. 
-
-
+During the project, it occurred to us that it would be interesting to compare demand with the supply of vegetarian and vegan restaurants. However, no data relating to vegetarian or vegan diets in the U.S. population was found. Therefore, we decided to visualize demand using Google search data, and used the search query for "vegetarian restaurants" and "vegan restaurants" through the website of [https://trends.google.com/] with a time period of 5 years. 
 
 ```{r google search data, warning=FALSE}
 # Vegetarian Restaurant Search Results
@@ -144,7 +141,7 @@ joined_data <- left_join(joined_data, vegan_temp %>%
 
 ## Missing Values
 
-We checked the search data for missing values. Unfortunately, data is not available for all provinces in the U.S. No information was found from Google if the data is not collected for certain provinces or whether there are no searches for these provinces We consider the latter unlikely based on the selected time period. With the following code we grouped the search data by province. 
+We checked the search data for missing values. Unfortunately, data was not available for all states in the USA. Google did not provide any information on whether the data is not collected for certain states or whether there are no searches for these states. We consider the latter unlikely given the time period selected. The missing information was treated as NA in the further analysis.
 
 ```{r missing data check google search results, warning=FALSE}
 sum(is.na(joined_data$total_searches_vegetarian))
@@ -157,8 +154,7 @@ sum(is.na(joined_data$total_searches_vegan))
 
 ## Summary Statistics
 
-In a first step we took a closer look into our data sources. With th following summary statistics on the mean income and population by Zip code [@mpsc2020] various insights can be gained. Regarding the Mean income, the following table shows the data is not cleaned as we have 7 missing values. However, the missing values do not influence our further analysis, therefore we decided to proceed with them. With regards to the insights, the table shows that the the difference between the income is very high. We can imagine that this is related to different living situations. For example, the data set may also include students with very low incomes, as well as households with two high earners. The summary statistic on the Population by Zipcode shows that in one Zipcode it seems that only one person is registered. We are aware that this is most probably not realistic but anyway we decided to use the data set for our analysis. Another interesting insight is that in the U.S. population by Zipcode has a Mean Population about 9193 which is equivalent to a small town in Switzerland.
-
+As a first step, we explored our data sources in more detail. The following summary statistics on median household income and population by zip code [@mpsc2020] provided several insights. Regarding median household income, the following table indicates that the data is not adjusted, as 7 values are missing. However, since the missing values did not affect our further analysis, we decided to proceed with them. The summary statistics also reveal that the difference between incomes is very large. One might assume that this is related to different living situations. For example, the dataset could include very low-income students and households with two high-income earners. The summary statistics on population by zip code suggest that there appears to be only one person registered in a zip code. We are aware that this is most likely an error in the dataset, but nevertheless decided to use the dataset for our analysis. Another interesting finding is that the U.S. population by zip code has an average population of 9193, which is equivalent to a small town in Switzerland.
 
 
 ```{r}
@@ -168,16 +164,16 @@ summary(income_pop_by_zip %>% select(Mean, Pop))
 
 
 ```{r}
-#summarize household income in U.S. 
-income_pop_by_zip %>% group_by(Zip) %>% 
-  summarize(mean=mean(Mean,na.rm=TRUE), std_dev =sd(Mean,na.rm=TRUE))
+#summarize household income in U.S.
+joined_data %>% group_by(province) %>% 
+  summarize(average_income = sum(Mean) / length(id), std_dev=sd(Mean,na.rm=TRUE))
 ```
 
 ## Histogram
 
 ### Vegetarian and Vegan Restaurant by State
 
-In the following Histograms the amount of vegetarian and vegan restaurants are shown by state, to get some insights how the data is distributed by the region. It can be seen that in our dataset, New York has the most records on vegetarian and vegan restaurants.California is the state with the second most vegetarian and vegan restaurants in our dataset. It can be seen that in our dataset the offering of vegetarian and vegan offers are spread quite equally beside New York and California.
+The histograms below present the number of vegetarian and vegan restaurants by state to give a sense of the regional distribution of the data. It is evident that New York has the most vegetarian and vegan restaurants in our data set, while California is the state with the second most vegetarian and vegan restaurants. In addition, we can see that the number of restaurants in other states seem to be fairly evenly distributed.
 
 ```{r}
 #Vegetarian and Vegan Restaurants by State
@@ -193,7 +189,7 @@ ggplot(number_of_res, aes(x=province, y=Number_Of_Restaurants, fill=province)) +
 
 ### Mean Houshold Income by State
 
-In the following histogram the mean household income is shown by state. Based on our dataset New York is the State with the highest mean household income, followed by Massachusetts and New Hampshire. The other states have a quite balanced mean household income. Nevada and Georgia have the lowest mean household income.
+The following histogram shows median household income by state. Based on our data set, New York is the state with the highest median household income, followed by Massachusetts and New Hampshire. The other states have a fairly balanced median household incomes. Nevada and Georgia have the lowest median household income.
 
 
 ```{r}
@@ -211,7 +207,7 @@ ggplot(data=temp, aes(x=province, y=Avg_Mean_Province, fill=province)) +
 
 ### Population by State
 
-The following histogram shows the population per state. New York has the highest population, this is probably due to the high population density in the city of New York. The State Nevada has by far the lowest population density which can be explained with the environment and climate conditions in this region. 
+The following histogram shows the population per state. New York has the highest population, which is probably due to the high population density in the city of New York. The state of Nevada has by far the lowest population density, which can be explained by the environmental and climatic conditions in this region.
 
 
 ```{r}
@@ -227,7 +223,7 @@ ggplot(data=temp, aes(x=province, y=Avg_Pop, fill=province)) +
 
 ### Vegetarian and Vegan Searches by State
 
-Based on the google search data Florida has the highest demand for vegetarian and vegan restaurants. The data does not fit with our findings from the restaurant data, based on this in Florida the offers for vegetarian and vegan restaurant ist not that high. 
+Based on Google search data, Florida has the highest demand for vegetarian and vegan restaurants. The data does not match our findings from the restaurant data, according to which the supply of vegetarian and vegan restaurants in Florida is not that high.
 
 ```{r}
 #summarize vegetarian & vegan searches
@@ -247,7 +243,7 @@ ggplot(google_search_frequency,
 
 ### Household Income
 
-With a Boxplot the distribution of at least one ordinal scaled value can be graphically shown. The following Boxplot shows the mean household income by state. The Median for Massachusetts seems to be quite high. In California and New Hampshire are some outliers with a very high mean household income. There are a few group of states which have almost the same median. 
+A boxplot can be used to graphically display the distribution of at least one ordinally scaled value. The boxplot below shows median household income by state. The median value for Massachusetts appears to be quite high. California and New Hampshire have some outliers with very high median household incomes. There are a few groups of states that have nearly the same median.
 
 ```{r}
 #Boxplot Household Income
@@ -256,9 +252,10 @@ ggplot(data=joined_data, aes(x=province, y=Mean, color=province)) +
   ggtitle("Yearly Mean Household Income by State") + xlab("State") + ylab("Mean Household Income") + labs(fill='State') +
   theme_minimal()
 ```
+
 ### Population
 
-The following shows the distribution of the population by state.
+The following illustrates the distribution of the population by state, again the spread for New York and California are the largest in this data set.
 
 ```{r}
 #Boxplot Population
@@ -294,7 +291,7 @@ colnames(unique_res_data) <- c("ID",
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 temp <- unique_res_data %>% select(`Number of Restaurants in State`, `Population Size at Zip Code`, `Mean Household Income at Zip Code`, `Google Search Frequency for Vegetarian Restaurant`, `Google Search Frequency for Vegan Restaurant`)
 
 ggpairs(temp, aes(alpha = 0.4))
@@ -321,7 +318,6 @@ summary(fit)
 \end{aligned}
 \]
 
-\newpage
 ## Interpretation
 
 - The R-squared seems to indicate that ~56% of the variability of the data around its mean is explained by the model.
@@ -358,51 +354,51 @@ Based on forward algorithm the predictors **population and mean household income
 
 ## Residuals
 
-```{r, fig.show="hold", out.width="50%", warning=TRUE, echo=FALSE}
+```{r, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
 par(mar = c(4, 4, .1, .1))
 model.diag.metrics <- augment(fit)
 # Population
-ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, `Population Size at Zip Code`)) +
+ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, 
+                               `Population Size at Zip Code`)) +
   geom_point() +
   stat_smooth(method = lm, se = FALSE) +
-  geom_segment(aes(xend = `Number of Restaurants in State`, yend = .fitted), color = "red", size = 0.3)
+  geom_segment(aes(xend = `Number of Restaurants in State`, 
+                   yend = .fitted), color = "red", size = 0.3)
 # Income
-ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, `Mean Household Income at Zip Code`)) +
+ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, 
+                               `Mean Household Income at Zip Code`)) +
   geom_point() +
   stat_smooth(method = lm, se = FALSE) +
-  geom_segment(aes(xend = `Number of Restaurants in State`, yend = .fitted), color = "red", size = 0.3)
+  geom_segment(aes(xend = `Number of Restaurants in State`, 
+                   yend = .fitted), color = "red", size = 0.3)
 # Google Search Frequency for Vegetarian Restaurant
-ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, `Google Search Frequency for Vegetarian Restaurant`)) +
+ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, 
+                               `Google Search Frequency for Vegetarian Restaurant`)) +
   geom_point() +
   stat_smooth(method = lm, se = FALSE) +
-  geom_segment(aes(xend = `Number of Restaurants in State`, yend = .fitted), color = "red", size = 0.3)
+  geom_segment(aes(xend = `Number of Restaurants in State`, 
+                   yend = .fitted), color = "red", size = 0.3)
 # Google Search Frequency for Vegan Restaurant
-ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, `Google Search Frequency for Vegan Restaurant`)) +
+ggplot(model.diag.metrics, aes(`Number of Restaurants in State`, 
+                               `Google Search Frequency for Vegan Restaurant`)) +
   geom_point() +
   stat_smooth(method = lm, se = FALSE) +
-  geom_segment(aes(xend = `Number of Restaurants in State`, yend = .fitted), color = "red", size = 0.3)
+  geom_segment(aes(xend = `Number of Restaurants in State`, 
+                   yend = .fitted), color = "red", size = 0.3)
 ```
-There does not appear to be a clear pattern in the residual plots, however NY at 110 and CA at 33 are clearly outliers in this data set.
+
+**Interpretation**
+
+There does not appear to be a clear pattern in the residual plots, however New York at 110 and California at 33 are clearly outliers in this data set.
 This is most likely due to the fact that the data set contains only a portion of the full data set.
 
 \newpage
 # Chapter of Choice: Maps, Wordcloud and Bookdown
 
-## Maps and Wordcloud 
+## Maps
 
-Since we were investigating location data, the idea of visualizing a map was quickly given. With the following code three different Maps has been visualized, to show the relation between the population size, the amount of restaurants and the google search frequency. 
+Since we were examining location data, the obvious choice was to visualize it as a map. The following code was used to visualize three different maps to show the relationship between population size, number of restaurants, and Google search frequency.
 
-#### Population by numbers of restaurants
-
-Map one shows the population size referring to the amount of restaurants. It can be clearly seen that in New York and California the population is quite high and as well there can be found the most vegetarian and vegan restaurants offers. While in the State New York the highest population size is counted in the city of New York, in California there are more than one high population spread through the whole state. In a further analysis it could be interesting to see, where the most restaurants in the respective states are places and if it correlates with the population size. 
-
-#### Mean household income by numbers of restaurants
-
-Map two "Income", shows the mean household income referring to the amount of restaurants. I can be seen, that based on our dataset there is not much correlation between the amount of restaurants and the mean household income.
-
-#### Google search frequency by numbers of restaurants
-
-Map three "Google Search Frequency" shows the demand for vegetarian and vegan restaurants. Based on our dataset it can be interpreted that in Florida and California the demand is quite high, followed by Texas and New York. Ignoring the low quality from the data, it could be recommended to restaurants owner to open a vegetarian or vegan restaurants in the mention states. 
 
 
 ```{r, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
@@ -512,14 +508,23 @@ ggplot() +
 
 ```
 
+### Population by numbers of restaurants
 
-```{r, eval=knitr::is_html_output(), echo=knitr::is_html_output() }
-knitr::asis_output("## Vegetarian and Vegan Cuisines (with wordcloud2)")
-```
+Map one shows the population size in relation to the number of restaurants. It can be clearly seen that New York and California have quite high populations and are also home to the highest number of vegetarian and vegan restaurants. While in the state of New York the highest population is counted in the city of New York, in California there is more than a high population spread all over the state. In further analysis, it might be interesting to see where the most restaurants are located in each state and if this correlates with population size. 
 
-The following wordcloud is only visible with the html output. Wordcloud can be used to visual arrange words based on their frequency. With wordcloud2 we could visualize an interactive wordcloud with the most frequent cuisines type mention in our restaurant dataset. Indian seems to be the most offered cuisine type with regard to vegetarian and vegan offers. 
+### Mean household income by numbers of restaurants
 
-```{r, eval=knitr::is_html_output(), warning=FALSE, fig.width=5, fig.height=5, echo=knitr::is_html_output()}
+Map two "Income" shows the mean household income in relation to the number of restaurants. It can be seen that based on our data set, there is not much correlation between the number of restaurants and the average household income.
+
+### Google search frequency by numbers of restaurants
+
+Map three "Google Search Frequency" shows the demand for vegetarian and vegan restaurants. Based on our dataset, it can be interpreted that the demand is quite high in Florida and California, followed by Texas and New York. If we disregard the low quality of the data, one could recommend restaurant owners to open a vegetarian or vegan restaurant in the mentioned states.
+
+## Wordcloud
+
+Wordclouds were used to visually arrange words based on their frequency. Using wordcloud2 and ggworcloud, we were able to visualize an interactive and static wordcloud version with the most frequently mentioned cuisine types in our restaurant dataset. Indian seemed to be the most commonly offered cuisine in terms of vegetarian and vegan offerings. 
+
+```{r, eval=TRUE, warning=FALSE, fig.width=5, fig.height=5, echo=TRUE}
 # devtools::install_github("lchiffon/wordcloud2") fixed rmarkdown
 df <- as.data.frame(do.call(rbind, 
                             lapply(joined_data$cuisines_split, as.data.frame)))
@@ -551,55 +556,21 @@ v <- sort(rowSums(
          )),decreasing=TRUE)
 word_frequency_df <- data.frame(word = names(v),freq=v)
 
-wordcloud_colors <- colorRampPalette(brewer.pal(11,"BrBG"))
-wordcloud2(word_frequency_df, size = 1, minRotation = pi/6, maxRotation = pi/6, 
-           rotateRatio = 1, color=rev(wordcloud_colors(32)[seq(1,32,1)]))
-```
+if(knitr::is_html_output()) {
+  wordcloud_colors <- colorRampPalette(brewer.pal(11,"BrBG"))
+  wordcloud2(word_frequency_df, size = 1, minRotation = pi/6, maxRotation = pi/6, 
+             rotateRatio = 1, color=rev(wordcloud_colors(32)[seq(1,32,1)]))  
+}
 
-```{r, eval=knitr::is_latex_output(), echo=knitr::is_latex_output() }
-knitr::asis_output("## Vegetarian and Vegan Cuisines (with ggwordcloud)")
-```
-
-With ggwordcloud the wordcloud can also be exported as pdf output thus less interactive.
-
-```{r, eval=knitr::is_latex_output(), warning=FALSE, fig.width=5, fig.height=5, echo=knitr::is_latex_output()}
-# devtools::install_github("lchiffon/wordcloud2") fixed rmarkdown
-df <- as.data.frame(do.call(rbind, 
-                            lapply(joined_data$cuisines_split, as.data.frame)))
-colnames(df) <- c("cuisines")
-
-# remove leading whitespaces
-df$cuisines <- trimws(df$cuisines)
-
-# additional fixes
-df$cuisines[df$cuisines == 'Dim Sum'] <- 'DimSum'
-df$cuisines[df$cuisines == 'Hot Dogs'] <- 'HotDogs'
-df$cuisines[df$cuisines == 'Fast Food'] <- 'FastFood'
-df$cuisines[df$cuisines == 'Deli Food'] <- 'Deli'
-df$cuisines[df$cuisines == 'Ice Cream and Desserts'] <- 'IceCream and Desserts'
-
-# remove nonsense words
-df <- df %>% filter(!(str_detect(cuisines, "Restaurant|Friendly|Vegetarian|Vegan|Health|Bar|Gluten|Bistro|Take|Local|Organic|Steak|Cater|North|South|Middle")))
-
-# seperate words by slash; the word ' and '; whitespace
-filtered <- df %>% separate_rows(cuisines, sep = "/") %>% 
-  separate_rows(cuisines, sep = " and ") %>% 
-  separate_rows(cuisines, sep = " ")
-filtered <- filtered %>% 
-  filter(!(str_detect(cuisines, "New|Modern|Small|Shops|Lunch|Pacific|American")))
-
-v <- sort(rowSums(
-  as.matrix(TermDocumentMatrix(
-    Corpus((VectorSource(filtered$cuisines))))
-         )),decreasing=TRUE)
-word_frequency_df <- data.frame(word = names(v),freq=v)
-
-ggplot(word_frequency_df, aes(label = word, size = freq, 
+if (knitr::is_latex_output()) {
+  ggplot(word_frequency_df, aes(label = word, size = freq, 
                               color = freq, angle = 30)) +
   geom_text_wordcloud(shape = "square", rm_outside = TRUE, max_steps = 1, 
                       grid_size = .1, eccentricity = .1) +
   scale_size_area(max_size = 10) +
   scale_color_viridis(option = "mako", direction = -1) + theme_void()
+}
+
 ```
 
 ## Bookdown
@@ -616,16 +587,15 @@ This paper was optimized using the Bookdown package:
 
 # Reflection and Conclusion on the Project
 
-At the beginning of the project, we very quickly came across the restaurant data from [@datafiniti2018]. At first sight, the data fulfilled all the necessary parameters for a comprehensive analysis. As already mentioned, we unfortunately only realised at a later stage that the dataset did not contain the full amount of data as stated in the description. This taught us that when using secondary data, the data must be examined very well. 
+At the beginning of the project, we very quickly came across the restaurant data from [@datafiniti2018]. At first glance, the data met all the necessary parameters for a comprehensive analysis. Unfortunately, as mentioned earlier, it was only later that we realized that the dataset did not contain the full amount of data as stated in the description. This taught us that when using secondary data, the data must be very well validated. 
 
-However we think the topic overall was worth analyzing. We assume with a better data quality or with the full dataset more interpretation could have been done. For the project now, we nevertheless found some interesting insights in the vegetarian and vegan restaurant offers and the demand of the population. 
+However, we think that overall the subject was worth analyzing. We assumed that with better data quality or with the full data set, more interpretations could have been made. For the project now, we still found some interesting insights into vegetarian and vegan restaurant supply and demand. 
 
-For a further analysis with more accurate data the project would led to insights for potential restaurants owner for decisions on where to open vegetarian and vegan restaurants. Another group of interest could be the vegetarian and vegan association to provide insights to the population. 
+If further analyzed with more accurate data, the project would lead to insights for potential restaurant owners to decide where to open vegetarian and vegan restaurants. Another group of interest could be the Vegetarian and Vegan Association to provide insight to the population. 
 
 # Conclusion for ourselves 
 
-The R-Bootcamp Week was for both of us very valuable and the content of the course covered various important material for our further studies as well as working life.The main learning process for us was achieved through the final project. It was very instructive to work independently on a project and to deepen and expand the basics we had learned. We are both positively surprised by our learning curve.
-
+The R-Bootcamp week was very valuable for both of us and the content of the course covered a lot of important content for our further studies and professional life. It was a very steep learning curve for us to work independently on a project and to deepen and expand on the basics we were taught. We are both positively surprised by our learning progress.
 
 \newpage
 # References
