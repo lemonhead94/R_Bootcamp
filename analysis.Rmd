@@ -226,17 +226,21 @@ ggplot(data=temp, aes(x=province, y=Avg_Pop, fill=province)) +
 Based on Google search data, Florida has the highest demand for vegetarian and vegan restaurants. The data does not match our findings from the restaurant data, according to which the supply of vegetarian and vegan restaurants in Florida is not that high.
 
 ```{r}
-#summarize vegetarian & vegan searches
-google_search_frequency <- joined_data %>% group_by(province) %>% 
+# province / type (vegan, veg) / value
+data <- joined_data %>% group_by(province) %>% 
   distinct(province, total_searches_vegan, total_searches_vegetarian) %>% 
-  summarise(google_search_frequency = total_searches_vegan + total_searches_vegetarian)
-
-ggplot(google_search_frequency, 
-       aes(x=province, y=google_search_frequency, fill=province)) + 
-  geom_bar(stat = "identity") +
-  ggtitle("Google Searches by State") + 
-  xlab("State") + ylab("Number of Google Searches") + labs(fill='State') +
-  theme_minimal()
+  pivot_longer(cols = c(`total_searches_vegetarian`, `total_searches_vegan`),
+               names_to = "type",
+               values_to = "value")
+# Google Searches Stacked
+ggplot(data, aes(x=province, y=value, fill=type)) + 
+    geom_bar(position="stack", stat="identity") +
+    scale_fill_discrete(name = "Search Keyword", 
+                        labels = c("Vegan Restaurant", 
+                                   "Vegetarian Restaurant")) +
+    ggtitle("Google Searches by State") + 
+    xlab("State") + ylab("Number of Google Searches") + 
+    theme_minimal() + theme(axis.text.x = element_text(angle = 45))
 ```
 
 ## Boxplots
