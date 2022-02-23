@@ -50,11 +50,8 @@ Inspired by Veganuary, we discovered a dataset about vegetarian and vegan restau
 The purpose of this paper is to examine the relationship between the number of vegetarian or vegan restaurants, population and median household income for the U.S. zip code [@mpsc2020], and the frequency of Google searches for vegetarian and vegan restaurants in that state [@vegan_google_trends; @vegetarian_google_trends]. With the small sample size of 211 restaurants and 10000 menu items, this study cannot significantly predict the number of vegetarian restaurants in a zip code.
 Nevertheless, this paper offers some insights into vegetarian and vegan supply in the U.S., as well as the demand and whether demographics, income, and Google searches match up.
 
-For the following work, different R Packages have been used. The following code shows, which packages have been included and an efficient way how to include multiple packages and for the work in a group. 
+For the following work, different R Packages have been used. The respective packages can be found in the original rmarkdown file. 
 
-# !!! should we include your fancy package set up code here?
-
-# !!! should we include here a graphical overview of our data? 
 
 
 # Methodology
@@ -65,13 +62,16 @@ In the following document different calculations and plotting methods are applie
 
 
 **Model**
-$$ \text{restaurants} = {\beta}_0 + {\beta}_1 * \text{residents} + {\beta}_2 * \text{income} + {\beta}_3 * \text{searches} $$
-The formula above shows the concept of the model. The model aims to explain the offers of vegetarian and vegan restaurants in the U.S. based on the demand in the different regions. The demand is interpret by the amount of searches on "vegan restaurants" and "vegetarian restaurants". Furthermore the model aims to explain a possible correlation between the offering and the demand in regards to the mean household income.
 
+
+$$ \text{restaurants} = {\beta}_0 + {\beta}_1 * \text{residents} + {\beta}_2 * \text{income} + {\beta}_3 * \text{searches} $$
+
+The formula above shows the concept of the model. The model aims to explain the offers of vegetarian and vegan restaurants in the U.S. based on the demand in the different regions. The demand is interpret by the amount of searches on "vegan restaurants" and "vegetarian restaurants". Furthermore the model aims to explain a possible correlation between the offering and the demand in regards to the mean household income. 
 
 ## Importing Data
 
 The following work is based on three different data sources. We are gathering data from [@datafiniti2018] through Kaggel (Restaurant Data), [@mpsc2020] (Mean household income U.S.) and from Google Trend [@vegan_google_trends; @vegetarian_google_trends] (Google Search Data).
+
 
 ```{r importing, warning=FALSE}
 #setwd("/Users/larissaeisele/switchdrive/R-Bootcamp/project-R_Bootcamp")
@@ -85,7 +85,7 @@ google_searches_vegan <- read_excel("./Data/searches_vegan_res.xlsx")
 
 ### Restaurant Data
 
-We are selecting the following data from the restaurant data set
+As a first step, we took a closer look into the restaurant data and decided which parameter was needed. With the following code, we're selecting the relevant parameter. Further, we had to change the type of zip code to numeric.
 
 ```{r restaurant data, warning=FALSE}
 restaurants <- restaurants %>% select(id, dateAdded, cuisines, latitude, 
@@ -95,7 +95,7 @@ restaurants$postalCode <- as.numeric(restaurants$postalCode)
 restaurants <- restaurants %>% mutate(cuisines_split = strsplit(cuisines,","))
 ```
 
-While looking closer into the restaurant data we found a restaurant without a Zip code. We looked up the respectiv restautant and found the right zip code for the restaurant. With the following code we cleaned the missing data from on restaurant and added the zip code to the data set. 
+While looking closer into the restaurant data, we found a restaurant without a zip code. We looked up the respective restaurant and found the right zip code for the restaurant. We cleaned the missing data from the restaurant and added the zip code to the dataset with the following code.
 
 ```{r restaurant missing data fix, warning=FALSE}
 restaurants[restaurants$id == "AV1Tp59p3D1zeR_xE2DL",]$postalCode <- 94596
@@ -104,6 +104,9 @@ anyNA(restaurants$postalCode) # There are no missing values anymore in postalCod
 
 
 ### Population Size and Mean Household Income Data
+
+To enrich our restaurant data, we joined the mean house income by zip code data. We did a left join with the join key of the zip codes of the two datasets.
+
 
 **Joining the Data**
 ```{r adding household mean and pop size to dataset, warning=FALSE}
@@ -119,7 +122,7 @@ sum(is.na(joined_data$Pop)) # all postal codes have a population
 
 ### Google Search Data
 
-During the project it occurred to us that it would be interesting to compare the demand with the supply of vegetarian and vegan restaurants. However, no data on vegetarian or vegan diets could be found from the U.S. population. Therefore, we decided to show the demand using Google search data. Therefore, we used the search query for "vegetarian restaurant" and "vegan restaurant" via the website of [https://trends.google.de/]. The last 5 years were chosen as the time period. 
+During the project, it occurred to us that it would be interesting to compare the demand with the supply of vegetarian and vegan restaurants. However, no data on vegetarian or vegan diets could be found from the U.S. population. Therefore, we decided to show the demand using Google search data. Therefore, we used the search query for "vegetarian restaurant" and "vegan restaurant" via the website of [https://trends.google.de/]. The last 5 years were chosen as the time period. 
 
 
 
@@ -170,7 +173,7 @@ income_pop_by_zip %>% group_by(Zip) %>%
 
 ## Histogram
 
-In the following Histograms the amount of vegan and vegetarian restaurants are shown by state, to get some insights how the data is distributed by the region. 
+In the following Histograms the amount of vegan and vegetarian restaurants are shown by state, to get some insights how the data is distributed by the region. It can be seen that in our dataset, New York has the most records on vegetarian and vegan restaurants.California is the state with the second most vegetarian and vegan restaurants in our dataset. It can be seen that in our dataset the offering of vegetarian and vegan offers are spread quite equally beside New York and California.
 
 ```{r}
 #Vegan and Vegetarian Restaurants by State
@@ -308,21 +311,6 @@ summary(fit)
 
 
 \newpage
-## Maps and Wordcloud | Chapter of Choice
-
-### Vegetarian and Vegan Restaurants in the U.S.
-
-Since we were investigating location data, the idea of visualizing a map was quickly given. With the following code three different Maps has been visualized, to show the relation between the population size, the amount of restaurants and the google search frequency. 
-
-#### Population by numbers of restaurants
-
-
-Map one shows the population size referring to the amount of restaurants. It can be clearly seen that in New York and California the population is quite high and as well there can be found the most vegetarian and vegan restaurants offers. While in the State New York the highest population size is counted in the city of New York, in California there are more than one high population spread through the whole state. In a further analysis it could be interesting to see, where the most restaurants in the respective states are places and if it correlates with the population size. 
-
-#### Mean household income by numbers of restaurants
-
-
-#### Google search frequency by numbers of restaurants
 
 
 ## Most significant predictors
@@ -372,6 +360,23 @@ This is most likely due to the fact that the data set contains only a portion of
 
 \newpage
 # Chater of Choice: Maps, Wordcloud and Bookdown
+
+## Maps and Wordcloud 
+
+### Vegetarian and Vegan Restaurants in the U.S.
+
+Since we were investigating location data, the idea of visualizing a map was quickly given. With the following code three different Maps has been visualized, to show the relation between the population size, the amount of restaurants and the google search frequency. 
+
+#### Population by numbers of restaurants
+
+
+Map one shows the population size referring to the amount of restaurants. It can be clearly seen that in New York and California the population is quite high and as well there can be found the most vegetarian and vegan restaurants offers. While in the State New York the highest population size is counted in the city of New York, in California there are more than one high population spread through the whole state. In a further analysis it could be interesting to see, where the most restaurants in the respective states are places and if it correlates with the population size. 
+
+#### Mean household income by numbers of restaurants
+
+
+#### Google search frequency by numbers of restaurants
+
 
 ```{r, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
 
