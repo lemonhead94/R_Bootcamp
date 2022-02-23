@@ -124,7 +124,7 @@ sum(is.na(joined_data$Pop)) # all postal codes have a population
 
 ### Google Search Data
 
-During the project, it occurred to us that it would be interesting to compare the demand with the supply of vegetarian and vegan restaurants. However, no data on vegetarian or vegan diets could be found from the U.S. population. Therefore, we decided to show the demand using Google search data. Therefore, we used the search query for "vegetarian restaurant" and "vegan restaurant" via the website of [https://trends.google.de/]. The last 5 years were chosen as the time period. 
+During the project, it occurred to us that it would be interesting to compare the demand with the supply of vegetarian and vegan restaurants. However, no data on vegetarian or vegan diets could be found from the U.S. population. Therefore, we decided to show the demand using Google search data. Therefore, we used the search query for "vegetarian restaurant" and "vegan restaurant" via the website of [@https://trends.google.de/]. The last 5 years were chosen as the time period. 
 
 
 
@@ -616,7 +616,11 @@ This paper was optimized using the Bookdown package:
 
 # Reflection and Conclusion on the Project
 
-Data Quality / Amount of Data 
+At the beginning of the project, we very quickly came across the restaurant data from [@datafiniti2018]. At first sight, the data fulfilled all the necessary parameters for a comprehensive analysis. As already mentioned, we unfortunately only realised at a later stage that the dataset did not contain the full amount of data as stated in the description. This taught us that when using secondary data, the data must be examined very well. 
+
+However we think the topic overall was worth analyzing. We assume with a better data quality or with the full dataset more interpretation could have been done. For the project now, we nevertheless found some interesting insights in the vegetarian and vegan restaurant offers and the demand of the population. 
+
+For a further analysis with more accurate data the project would led to insights for potential restaurants owner for decisions on where to open vegetarian and vegan restaurants. Another group of interest could be the vegetarian and vegan association to provide insights to the population. 
 
 # Conclusion for ourselves 
 
