@@ -183,7 +183,7 @@ ggplot(number_of_res, aes(x=province, y=Number_Of_Restaurants, fill=province)) +
   geom_bar(stat = "identity") +
   ggtitle("Number of Restaurants by State") + 
   xlab("State") + ylab("Number of Restaurants") + labs(fill='State') +
-  theme_minimal()
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45))
 ```
 \newpage
 
@@ -200,7 +200,7 @@ ggplot(data=temp, aes(x=province, y=Avg_Mean_Province, fill=province)) +
   geom_bar(stat="identity") +
   ggtitle("Yearly Mean Household Income by State") + 
   xlab("State") + ylab("Average Mean Household Income") + labs(fill='State') +
-  theme_minimal()
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45))
 
 ```
 \newpage
@@ -218,14 +218,14 @@ ggplot(data=temp, aes(x=province, y=Avg_Pop, fill=province)) +
   geom_bar(stat="identity") +
   ggtitle("Population by State") + 
   xlab("State") + ylab("Average Population") + labs(fill='State') +
-  theme_minimal()
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45))
 ```
 
 ### Vegetarian and Vegan Searches by State
 
 Based on Google search data, Florida has the highest demand for vegetarian and vegan restaurants. The data does not match our findings from the restaurant data, according to which the supply of vegetarian and vegan restaurants in Florida is not that high.
 
-```{r}
+```{r, warning=FALSE}
 # province / type (vegan, veg) / value
 data <- joined_data %>% group_by(province) %>% 
   distinct(province, total_searches_vegan, total_searches_vegetarian) %>% 
@@ -249,7 +249,7 @@ ggplot(data, aes(x=province, y=value, fill=type)) +
 
 A boxplot can be used to graphically display the distribution of at least one ordinally scaled value. The boxplot below shows median household income by state. The median value for Massachusetts appears to be quite high. California and New Hampshire have some outliers with very high median household incomes. There are a few groups of states that have nearly the same median.
 
-```{r}
+```{r, warning=FALSE}
 #Boxplot Household Income
 ggplot(data=joined_data, aes(x=province, y=Mean, color=province)) +
   geom_boxplot(alpha=1) +
