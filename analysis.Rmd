@@ -81,6 +81,8 @@ google_searches_vegetarian <- read_excel("./Data/searches_vegetarian_res.xlsx")
 google_searches_vegan <- read_excel("./Data/searches_vegan_res.xlsx")
 ```
 
+\newpage
+
 ## Data Processing
 
 ### Restaurant Data
@@ -173,10 +175,12 @@ income_pop_by_zip %>% group_by(Zip) %>%
 
 ## Histogram
 
-In the following Histograms the amount of vegan and vegetarian restaurants are shown by state, to get some insights how the data is distributed by the region. It can be seen that in our dataset, New York has the most records on vegetarian and vegan restaurants.California is the state with the second most vegetarian and vegan restaurants in our dataset. It can be seen that in our dataset the offering of vegetarian and vegan offers are spread quite equally beside New York and California.
+### Vegetarian and Vegan Restaurant by State
+
+In the following Histograms the amount of vegetarian and vegan restaurants are shown by state, to get some insights how the data is distributed by the region. It can be seen that in our dataset, New York has the most records on vegetarian and vegan restaurants.California is the state with the second most vegetarian and vegan restaurants in our dataset. It can be seen that in our dataset the offering of vegetarian and vegan offers are spread quite equally beside New York and California.
 
 ```{r}
-#Vegan and Vegetarian Restaurants by State
+#Vegetarian and Vegan Restaurants by State
 number_of_res <- joined_data %>% group_by(province) %>% 
   summarise(Number_Of_Restaurants = n_distinct(id))
 ggplot(number_of_res, aes(x=province, y=Number_Of_Restaurants, fill=province)) + 
@@ -185,6 +189,11 @@ ggplot(number_of_res, aes(x=province, y=Number_Of_Restaurants, fill=province)) +
   xlab("State") + ylab("Number of Restaurants") + labs(fill='State') +
   theme_minimal()
 ```
+\newpage
+
+### Mean Houshold Income by State
+
+In the following histogram the mean household income is shown by state. Based on our dataset New York is the State with the highest mean household income, followed by Massachusetts and New Hampshire. The other states have a quite balanced mean household income. Nevada and Georgia have the lowest mean household income.
 
 
 ```{r}
@@ -198,6 +207,12 @@ ggplot(data=temp, aes(x=province, y=Avg_Mean_Province, fill=province)) +
   theme_minimal()
 
 ```
+\newpage
+
+### Population by State
+
+The following histogram shows the population per state. New York has the highest population, this is probably due to the high population density in the city of New York. The State Nevada has by far the lowest population density which can be explained with the environment and climate conditions in this region. 
+
 
 ```{r}
 # Population by State
@@ -210,8 +225,12 @@ ggplot(data=temp, aes(x=province, y=Avg_Pop, fill=province)) +
   theme_minimal()
 ```
 
+### Vegetarian and Vegan Searches by State
+
+Based on the google search data Florida has the highest demand for vegetarian and vegan restaurants. The data does not fit with our findings from the restaurant data, based on this in Florida the offers for vegetarian and vegan restaurant ist not that high. 
+
 ```{r}
-#summarize vegan & vegetarian searches
+#summarize vegetarian & vegan searches
 google_search_frequency <- joined_data %>% group_by(province) %>% 
   distinct(province, total_searches_vegan, total_searches_vegetarian) %>% 
   summarise(google_search_frequency = total_searches_vegan + total_searches_vegetarian)
@@ -226,6 +245,10 @@ ggplot(google_search_frequency,
 
 ## Boxplots
 
+### Household Income
+
+With a Boxplot the distribution of at least one ordinal scaled value can be graphically shown. The following Boxplot shows the mean household income by state. The Median for Massachusetts seems to be quite high. In California and New Hampshire are some outliers with a very high mean household income. There are a few group of states which have almost the same median. 
+
 ```{r}
 #Boxplot Household Income
 ggplot(data=joined_data, aes(x=province, y=Mean, color=province)) +
@@ -233,7 +256,9 @@ ggplot(data=joined_data, aes(x=province, y=Mean, color=province)) +
   ggtitle("Yearly Mean Household Income by State") + xlab("State") + ylab("Mean Household Income") + labs(fill='State') +
   theme_minimal()
 ```
+### Population
 
+The following shows the distribution of the population by state.
 
 ```{r}
 #Boxplot Population
@@ -244,6 +269,8 @@ ggplot(data=joined_data, aes(x=province, y=Pop, color=province)) +
 ```
 
 ## Scatterplot
+
+With scatterplots a relationship between two variables can be visualized. The following scatterplot shows the relationship between the demand of vegan and vegetarian restaurants and the amount of offers by region. 
 
 ```{r}
 number_of_res <- joined_data %>% group_by(province) %>% 
@@ -266,7 +293,7 @@ colnames(unique_res_data) <- c("ID",
                                "Number of Restaurants in State")
 ```
 
-With scatterplots a relationship between two variables can be visualized. The following scatterplot shows the relationship between the demand of vegan and vegetarian restaurants and the amount of offers by region. 
+
 ```{r, echo=FALSE}
 temp <- unique_res_data %>% select(`Number of Restaurants in State`, `Population Size at Zip Code`, `Mean Household Income at Zip Code`, `Google Search Frequency for Vegetarian Restaurant`, `Google Search Frequency for Vegan Restaurant`)
 
@@ -359,23 +386,23 @@ There does not appear to be a clear pattern in the residual plots, however NY at
 This is most likely due to the fact that the data set contains only a portion of the full data set.
 
 \newpage
-# Chater of Choice: Maps, Wordcloud and Bookdown
+# Chapter of Choice: Maps, Wordcloud and Bookdown
 
 ## Maps and Wordcloud 
-
-### Vegetarian and Vegan Restaurants in the U.S.
 
 Since we were investigating location data, the idea of visualizing a map was quickly given. With the following code three different Maps has been visualized, to show the relation between the population size, the amount of restaurants and the google search frequency. 
 
 #### Population by numbers of restaurants
 
-
 Map one shows the population size referring to the amount of restaurants. It can be clearly seen that in New York and California the population is quite high and as well there can be found the most vegetarian and vegan restaurants offers. While in the State New York the highest population size is counted in the city of New York, in California there are more than one high population spread through the whole state. In a further analysis it could be interesting to see, where the most restaurants in the respective states are places and if it correlates with the population size. 
 
 #### Mean household income by numbers of restaurants
 
+Map two "Income", shows the mean household income referring to the amount of restaurants. I can be seen, that based on our dataset there is not much correlation between the amount of restaurants and the mean household income.
 
 #### Google search frequency by numbers of restaurants
+
+Map three "Google Search Frequency" shows the demand for vegetarian and vegan restaurants. Based on our dataset it can be interpreted that in Florida and California the demand is quite high, followed by Texas and New York. Ignoring the low quality from the data, it could be recommended to restaurants owner to open a vegetarian or vegan restaurants in the mention states. 
 
 
 ```{r, fig.show="hold", out.width="50%", warning=FALSE, echo=TRUE}
@@ -485,9 +512,12 @@ ggplot() +
 
 ```
 
+
 ```{r, eval=knitr::is_html_output(), echo=knitr::is_html_output() }
 knitr::asis_output("## Vegetarian and Vegan Cuisines (with wordcloud2)")
 ```
+
+The following wordcloud is only visible with the html output. Wordcloud can be used to visual arrange words based on their frequency. With wordcloud2 we could visualize an interactive wordcloud with the most frequent cuisines type mention in our restaurant dataset. Indian seems to be the most offered cuisine type with regard to vegetarian and vegan offers. 
 
 ```{r, eval=knitr::is_html_output(), warning=FALSE, fig.width=5, fig.height=5, echo=knitr::is_html_output()}
 # devtools::install_github("lchiffon/wordcloud2") fixed rmarkdown
@@ -529,6 +559,8 @@ wordcloud2(word_frequency_df, size = 1, minRotation = pi/6, maxRotation = pi/6,
 ```{r, eval=knitr::is_latex_output(), echo=knitr::is_latex_output() }
 knitr::asis_output("## Vegetarian and Vegan Cuisines (with ggwordcloud)")
 ```
+
+With ggwordcloud the wordcloud can also be exported as pdf output thus less interactive.
 
 ```{r, eval=knitr::is_latex_output(), warning=FALSE, fig.width=5, fig.height=5, echo=knitr::is_latex_output()}
 # devtools::install_github("lchiffon/wordcloud2") fixed rmarkdown
