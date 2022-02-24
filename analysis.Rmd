@@ -69,7 +69,7 @@ The formula above illustrates our original concept for the model. The model aims
 
 ## Importing Data
 
-The following work is based on three different data sources. We are gathering data from [@datafiniti2018] through Kaggel (Restaurant Data), [@mpsc2020] (Mean household income U.S.) and from Google Trend [@vegan_google_trends; @vegetarian_google_trends] (Google Search Data).
+The following work is based on three different data sources. We are gathering data from @datafiniti2018 through Kaggel (Restaurant Data), @mpsc2020 (Mean household income U.S.) and from @vegan_google_trends and @vegetarian_google_trends (Google Search Data).
 
 
 ```{r importing, warning=FALSE}
@@ -123,7 +123,7 @@ sum(is.na(joined_data$Pop)) # all postal codes have a population
 
 ### Google Search Data
 
-During the project, it occurred to us that it would be interesting to compare demand with the supply of vegetarian and vegan restaurants. However, no data relating to vegetarian or vegan diets in the U.S. population was found. Therefore, we decided to visualize demand using Google search data, and used the search query for "vegetarian restaurants" and "vegan restaurants" through the website of [https://trends.google.com/] with a time period of 5 years. 
+During the project, it occurred to us that it would be interesting to compare demand with the supply of vegetarian and vegan restaurants. However, no data relating to vegetarian or vegan diets in the U.S. population was found. Therefore, we decided to visualize demand using Google search data, and used the search query for "vegetarian restaurants" and "vegan restaurants" through the website of [Google Trends](https://trends.google.com/) with a time period of 5 years. 
 
 ```{r google search data, warning=FALSE}
 # Vegetarian Restaurant Search Results
@@ -223,7 +223,7 @@ ggplot(data=temp, aes(x=province, y=Avg_Pop, fill=province)) +
 
 ### Vegetarian and Vegan Searches by State
 
-Based on Google search data, Florida has the highest demand for vegetarian and vegan restaurants. The data does not match our findings from the restaurant data, according to which the supply of vegetarian and vegan restaurants in Florida is not that high. Comparing the searches in regard to vegetarian or vegan restaurants, the graphic shows that the demand for vegan restaurants seems to be higher. This also can be explained, as it is probably less usual that a normal restaurants serves vegan dishes while in most restaurant at least a few vegetarian dishes are available. 
+Based on Google search data, Florida has the highest demand for vegetarian and vegan restaurants. The data does not match our findings from the restaurant data, according to which the supply of vegetarian and vegan restaurants in Florida is not that high. Comparing the searches for vegetarian or vegan restaurants, the graph shows that the demand for vegan restaurants seems to be higher. This may also be attributed to the fact that it is less common for a regular restaurant to serve vegan dishes, while most restaurants offer at least a few vegetarian dishes.
 
 ```{r, warning=FALSE}
 # province / type (vegan, veg) / value
