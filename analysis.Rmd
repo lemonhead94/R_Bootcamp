@@ -45,7 +45,7 @@ package.check <- lapply(packages, FUN = function(x) {
 \fancyhead[R]{R-Bootcamp}
 # Introduction
 
-Inspired by Veganuary, we discovered a dataset about vegetarian and vegan restaurants in the US [@datafiniti2018]. The dataset was found through a dataset search on Google, hosted on Kaggel. The reason for selecting this dataset was that many useful parameters were already available. The description of the dataset states that it contains data from 18,0000 restaurants. Unfortunately, we only later noticed that only 211 individual restaurants with 10,000 menu items are included in the dataset, as it serves as an advertisement for the Datafiniti Business Database. The entire dataset is only available for purchase, and after consulting with the lecturer (Matteo Tanadini), it was agreed that the study should continue with less meaningful results.
+Inspired by Veganuary, we discovered a dataset about vegetarian and vegan restaurants in the U.S. [@datafiniti2018]. The dataset was found through a dataset search on Google, hosted on Kaggel. The reason for selecting this dataset was that many useful parameters were already available. The description of the dataset states that it contains data from 18,0000 restaurants. Unfortunately, we only later noticed that only 211 individual restaurants with 10,000 menu items are included in the dataset, as it serves as an advertisement for the Datafiniti Business Database. The entire dataset is only available for purchase, and after consulting with the lecturer (Matteo Tanadini), it was agreed that the study should continue with less meaningful results.
 
 The purpose of this paper is to examine the relationship between the number of vegetarian or vegan restaurants, population and median household income for the U.S. zip code [@mpsc2020], and the frequency of Google searches for vegetarian and vegan restaurants in that state [@vegan_google_trends; @vegetarian_google_trends]. With the small sample size of 211 restaurants and 10000 menu items, this study cannot significantly predict the number of vegetarian restaurants in a zip code.
 Nevertheless, this paper offers some insights into vegetarian and vegan supply in the U.S., as well as the demand and whether demographics, income, and Google searches match up.
@@ -65,7 +65,7 @@ In the following document, different calculation and presentation methods are us
 
 $$ \text{restaurants} = {\beta}_0 + {\beta}_1 * \text{residents} + {\beta}_2 * \text{income} + {\beta}_3 * \text{searches} $$
 
-The formula above illustrates our original concept for the model. The model aims to explain the supply of vegetarian and vegan restaurants in the US based on demand in different regions. Demand is interpreted by the number of searches for "vegan restaurants" and "vegetarian restaurants." In addition, the model is designed to explain a possible relationship between supply and demand in terms of mean household income and population size. 
+The formula above illustrates our original concept for the model. The model aims to explain the supply of vegetarian and vegan restaurants in the U.S. based on demand in different regions. Demand is interpreted by the number of searches for "vegan restaurants" and "vegetarian restaurants." In addition, the model is designed to explain a possible relationship between supply and demand in terms of mean household income and population size. 
 
 ## Importing Data
 
@@ -141,7 +141,7 @@ joined_data <- left_join(joined_data, vegan_temp %>%
 
 ## Missing Values
 
-We checked the search data for missing values. Unfortunately, data was not available for all states in the USA. Google did not provide any information on whether the data is not collected for certain states or whether there are no searches for these states. We consider the latter unlikely given the time period selected. The missing information was treated as NA in the further analysis.
+We checked the search data for missing values. Unfortunately, data was not available for all states in the U.S. Google did not provide any information on whether the data is not collected for certain states or whether there are no searches for these states. We consider the latter unlikely given the time period selected. The missing information was treated as NA in the further analysis.
 
 ```{r missing data check google search results, warning=FALSE}
 sum(is.na(joined_data$total_searches_vegetarian))
@@ -173,7 +173,7 @@ joined_data %>% group_by(province) %>%
 
 ### Vegetarian and Vegan Restaurant by State
 
-The histograms below present the number of vegetarian and vegan restaurants by state to give a sense of the regional distribution of the data. It is evident that New York has the most vegetarian and vegan restaurants in our data set, while California is the state with the second most vegetarian and vegan restaurants. In addition, we can see that the number of restaurants in other states seem to be fairly evenly distributed.
+The histograms below present the number of vegetarian and vegan restaurants by state to give a sense of the regional distribution of the data. It is evident that New York has the most vegetarian and vegan restaurants in our dataset, while California is the state with the second most vegetarian and vegan restaurants. In addition, we can see that the number of restaurants in other states seem to be fairly evenly distributed.
 
 ```{r}
 #Vegetarian and Vegan Restaurants by State
@@ -189,7 +189,7 @@ ggplot(number_of_res, aes(x=province, y=Number_Of_Restaurants, fill=province)) +
 
 ### Mean Houshold Income by State
 
-The following histogram shows median household income by state. Based on our data set, New York is the state with the highest median household income, followed by Massachusetts and New Hampshire. The other states have a fairly balanced median household incomes. Nevada and Georgia have the lowest median household income.
+The following histogram shows median household income by state. Based on our dataset, New York is the state with the highest median household income, followed by Massachusetts and New Hampshire. The other states have a fairly balanced median household incomes. Nevada and Georgia have the lowest median household income.
 
 
 ```{r}
@@ -223,7 +223,7 @@ ggplot(data=temp, aes(x=province, y=Avg_Pop, fill=province)) +
 
 ### Vegetarian and Vegan Searches by State
 
-Based on Google search data, Florida has the highest demand for vegetarian and vegan restaurants. The data does not match our findings from the restaurant data, according to which the supply of vegetarian and vegan restaurants in Florida is not that high.
+Based on Google search data, Florida has the highest demand for vegetarian and vegan restaurants. The data does not match our findings from the restaurant data, according to which the supply of vegetarian and vegan restaurants in Florida is not that high. Comparing the searches in regard to vegetarian or vegan restaurants, the graphic shows that the demand for vegan restaurants seems to be higher. This also can be explained, as it is probably less usual that a normal restaurants serves vegan dishes while in most restaurant at least a few vegetarian dishes are available. 
 
 ```{r, warning=FALSE}
 # province / type (vegan, veg) / value
@@ -260,7 +260,8 @@ ggplot(data=joined_data, aes(x=province, y=Mean, color=province)) +
 
 ### Population
 
-The following illustrates the distribution of the population by state, again the spread for New York and California are the largest in this data set.
+The following illustrates the distribution of the population by state, again the spread for New York and California are the largest in this dataset.  
+
 
 ```{r}
 #Boxplot Population
